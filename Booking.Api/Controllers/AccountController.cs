@@ -1,4 +1,5 @@
-﻿using Booking.Application.ApplicationUser.Commands.DeleteUser;
+﻿using Booking.Application.ApplicationUser.Commands.ChangePassword;
+using Booking.Application.ApplicationUser.Commands.DeleteUser;
 using Booking.Application.ApplicationUser.Commands.Register;
 using Booking.Application.ApplicationUser.Commands.UpdateUser;
 using Booking.Application.ApplicationUser.Queries.GetAllUsers;
@@ -52,5 +53,13 @@ public class AccountController(IMediator _mediator) : ControllerBase
     {
         var result =await _mediator.Send(new DeleteUserCommand(Id));
         return NoContent();
+    }
+
+    [HttpPut("ChangePassword/{Id}")]
+    public async Task<IActionResult> ChangePassword([FromRoute]int Id, [FromBody] ChangePasswordCommand changePasswordCommand)
+    {
+        changePasswordCommand.Id = Id;
+        var result = await _mediator.Send(changePasswordCommand);
+        return Ok(result);
     }
 }
