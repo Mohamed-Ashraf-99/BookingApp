@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs/Booking
+/Booking.Api/bin/Debug/net8.0
+/Booking.Api/obj
+/Booking.Application/bin/Debug/net8.0
+/Booking.Application/obj/Debug/net8.0/ref
+/Booking.Application/obj/Debug/net8.0
