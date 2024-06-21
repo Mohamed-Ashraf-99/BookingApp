@@ -1,4 +1,5 @@
 ﻿using Booking.Application.ApplicationUser.Commands.Register;
+using Booking.Application.ApplicationUser.Commands.UpdateUser;
 using Booking.Application.ApplicationUser.Queries.GetAllUsers;
 using Booking.Application.ApplicationUser.Queries.GetUserById;
 using MediatR;
@@ -34,4 +35,14 @@ public class AccountController(IMediator _mediator) : ControllerBase
         return Ok(user);
     }
 
+    [HttpPut("{Id}")]
+    public async Task<IActionResult> Update([FromBody]UpdateUserCommand updateUserCommand)
+    {
+        if (ModelState.IsValid)
+        {
+            var result = await _mediator.Send(updateUserCommand);
+            return Ok(result);
+        }
+        return BadRequest();
+    }
 }
