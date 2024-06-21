@@ -1,4 +1,5 @@
-﻿using Booking.Application.ApplicationUser.Commands.Register;
+﻿using Booking.Application.ApplicationUser.Commands.DeleteUser;
+using Booking.Application.ApplicationUser.Commands.Register;
 using Booking.Application.ApplicationUser.Commands.UpdateUser;
 using Booking.Application.ApplicationUser.Queries.GetAllUsers;
 using Booking.Application.ApplicationUser.Queries.GetUserById;
@@ -44,5 +45,12 @@ public class AccountController(IMediator _mediator) : ControllerBase
             return Ok(result);
         }
         return BadRequest();
+    }
+
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> Delete([FromRoute] int Id)
+    {
+        var result =await _mediator.Send(new DeleteUserCommand(Id));
+        return NoContent();
     }
 }
