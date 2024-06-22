@@ -1,4 +1,4 @@
-﻿using Booking.Application.Authentication.Commands;
+﻿using Booking.Application.Authentication.Commands.SignIn;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;

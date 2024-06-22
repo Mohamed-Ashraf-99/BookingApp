@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace Booking.Application.Authentication.Commands
+namespace Booking.Application.Authentication.Commands.SignIn
 {
     public class SignInCommandValidator : AbstractValidator<SignInCommand>
     {

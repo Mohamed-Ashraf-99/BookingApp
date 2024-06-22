@@ -4,6 +4,7 @@ using Booking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240622174404_Add-UserRefreshToken-Entity")]
+    partial class AddUserRefreshTokenEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -522,9 +525,6 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Token")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
@@ -969,13 +969,13 @@ namespace Booking.Infrastructure.Migrations
 
             modelBuilder.Entity("Booking.Domain.Entities.UserRefreshToken", b =>
                 {
-                    b.HasOne("Booking.Domain.Entities.Identity.User", "user")
-                        .WithMany("UserRefreshTokens")
+                    b.HasOne("Booking.Domain.Entities.Identity.User", "User")
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("user");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.WishList", b =>
@@ -1110,11 +1110,6 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("Reviews");
 
                     b.Navigation("Rooms");
-                });
-
-            modelBuilder.Entity("Booking.Domain.Entities.Identity.User", b =>
-                {
-                    b.Navigation("UserRefreshTokens");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Owner", b =>

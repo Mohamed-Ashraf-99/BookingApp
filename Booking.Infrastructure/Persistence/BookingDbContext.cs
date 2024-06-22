@@ -26,6 +26,7 @@ public class BookingDbContext(DbContextOptions options) : IdentityDbContext<User
     public DbSet<Room> Rooms { get; set; }
     public DbSet<RoomFacilities> RoomFacilities { get; set; }
     public DbSet<WishList> WishList { get; set; }
+    public DbSet<UserRefreshToken> UsersRefreshTokens { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

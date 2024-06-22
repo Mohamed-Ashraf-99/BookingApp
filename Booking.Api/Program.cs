@@ -16,7 +16,7 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-
+         
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -54,7 +54,7 @@ public class Program
             // Sign-in settings (customize as needed)
             options.SignIn.RequireConfirmedPhoneNumber = false;
         })
-        .AddEntityFrameworkStores<BookingDbContext>() // Registering the DbContext for Identity
+        .AddEntityFrameworkStores<BookingDbContext>()
         .AddDefaultTokenProviders();
 
       
@@ -67,7 +67,7 @@ public class Program
 
         var app = builder.Build();
 
-        // Seed data
+        //Seed data
         //using (var scope = app.Services.CreateScope())
         //{
         //    var seeder = scope.ServiceProvider.GetRequiredService<IRestaurantSeeder>();

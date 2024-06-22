@@ -1,8 +1,8 @@
 ﻿using Booking.Application.Authentication.Helpers;
-using Booking.Domain.Entities.Identity;
+using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
+using Booking.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,6 +47,10 @@ public static class ServiceCollectionExtensions
                 ValidateLifetime = jwtSettings.ValidateLifeTime,
             };
         });
+        #endregion
+
+        #region RefreshToken
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
         #endregion
     }
 }

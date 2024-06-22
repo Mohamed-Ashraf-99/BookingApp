@@ -1,8 +1,9 @@
-﻿using Booking.Domain.Entities.Identity;
+﻿using Booking.Application.Authentication.Helpers;
+using Booking.Domain.Entities.Identity;
 
 namespace Booking.Application.Services.Authentication;
 
 public interface IAuthenticationServices
 {
-    Task<string> GetJWTToken(User user);
+    Task<JwtAuthResult> GetJWTToken(User user);
 }
