@@ -34,7 +34,7 @@ public class Program
         builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
         {
             // Require a confirmed email to log in
-            options.SignIn.RequireConfirmedEmail = true;
+            //options.SignIn.RequireConfirmedEmail = true;
 
             // Password settings (customize as needed)
             options.Password.RequireDigit = true;
@@ -86,6 +86,8 @@ public class Program
         }
 
         app.UseHttpsRedirection();
+
+        app.UseAuthentication();
 
         app.UseAuthorization();
 

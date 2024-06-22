@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Booking.Application.Services.Authentication;
+using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,6 +18,8 @@ public static class ServiceCollectionExtensions
 
         services.AddMediatR(cfg
             => cfg.RegisterServicesFromAssembly(applicationAssembly));
+
+        services.AddScoped<IAuthenticationServices, AuthenticationServices>();
 
     }
 }
