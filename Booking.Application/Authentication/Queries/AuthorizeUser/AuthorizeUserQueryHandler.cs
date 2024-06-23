@@ -10,10 +10,8 @@ public class AuthorizeUserQueryHandler(ILogger<AuthorizeUserQueryHandler> _logge
     public async Task<string> Handle(AuthorizeUserQuery request, CancellationToken cancellationToken)
     {
         var result = await _authenticationServices.ValidateToken(request.AccessToken);
-        if (result == "Succeeded")
+        if (result == "NotExpired")
             return result;
-
-        else
-            return "Expired";
+        return "Expired";
     }
 }

@@ -4,6 +4,7 @@ using Booking.Domain.Entities.Identity;
 using Booking.Domain.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -14,7 +15,8 @@ namespace Booking.Application.Services.Authentication;
 
 public class AuthenticationServices(JwtSettings _jwtSettings,
     IRefreshTokenRepository _refreshTokenRepository,
-    UserManager<User> _userManager) : IAuthenticationServices
+    UserManager<User> _userManager,
+    ILogger<AuthenticationServices> _logger) : IAuthenticationServices
 {
     public async Task<JwtAuthResult> GetJWTToken(User user)
     {
@@ -116,7 +118,7 @@ public class AuthenticationServices(JwtSettings _jwtSettings,
         {
             userRefreshToken.IsRevoked = true;
             userRefreshToken.IsUsed = false;
-            await _refreshTokenRepository.UpdateAsync(userRefreshToken);   
+            await _refreshTokenRepository.UpdateAsync(userRefreshToken);
             throw new SecurityTokenException("Refresh Token is expired");
         }
 
@@ -155,29 +157,31 @@ public class AuthenticationServices(JwtSettings _jwtSettings,
     public async Task<string> ValidateToken(string accessToken)
     {
         var handler = new JwtSecurityTokenHandler();
-        var response = handler.ReadJwtToken(accessToken);
-
-        var parameter = new TokenValidationParameters
+        var parameters = new TokenValidationParameters
         {
             ValidateIssuer = _jwtSettings.ValidateIssuer,
             ValidIssuers = new[] { _jwtSettings.Issuer },
-            ValidateIssuerSigningKey = _jwtSettings.ValidateIssuerSignInKey,
+            ValidateIssuerSigningKey = _jwtSettings.ValidateIssuerSigningKey,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)),
             ValidAudience = _jwtSettings.Audience,
             ValidateAudience = _jwtSettings.ValidateAudience,
             ValidateLifetime = _jwtSettings.ValidateLifeTime,
         };
-        var validatorToken = handler.ValidateToken(accessToken, parameter, out SecurityToken validatedToken);
         try
         {
-            if (validatorToken is null)
-                throw new SecurityTokenException("Invalid Token");
+            var validator = handler.ValidateToken(accessToken, parameters, out SecurityToken validatedToken);
 
-            return "Succeeded";
+            if (validator == null)
+            {
+                return "InvalidToken";
+            }
+
+            return "NotExpired";
         }
         catch (Exception ex)
         {
             return ex.Message;
         }
     }
+
 }
