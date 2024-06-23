@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Authentication.Helpers;
 using Booking.Domain.Entities.Identity;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace Booking.Application.Services.Authentication;
 
