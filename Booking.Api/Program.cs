@@ -67,6 +67,14 @@ public class Program
 
         var app = builder.Build();
 
+        // Use CORS
+        app.UseCors(options =>
+        {
+            options.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+
         //Seed data
         //using (var scope = app.Services.CreateScope())
         //{
