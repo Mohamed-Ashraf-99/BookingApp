@@ -23,6 +23,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IHotelRepository,HotelRepository>();
         services.AddScoped<IOfferRepository,OfferRepository>(); 
         services.AddScoped<IReviewsRepository,ReviewsRepository>();
+        services.AddScoped<IWishListRepository, WishListRepository>();
         // services.AddIdentityCore<User>()
         //.AddEntityFrameworkStores<RestaurantDbContext>();
 
