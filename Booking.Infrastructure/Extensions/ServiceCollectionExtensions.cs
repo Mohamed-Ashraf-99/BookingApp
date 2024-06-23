@@ -2,6 +2,7 @@
 using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
 using Booking.Infrastructure.Repositories;
+using Booking.Infrastructure.Seeders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -82,8 +83,10 @@ namespace Booking.Infrastructure.Extensions
             });
 
 
+            services.AddScoped<IBookingSeeder, BookingSeeder>();
             #region RefreshToken
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+            
             #endregion
         }
     }

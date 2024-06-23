@@ -6,17 +6,18 @@ using Booking.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
 using Microsoft.AspNetCore.Hosting;
+using Booking.Infrastructure.Seeders;
 
 namespace Booking.Api;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-         
+
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -28,7 +29,6 @@ public class Program
         // Register application and infrastructure services
         builder.Services.AddApplication();
         builder.Services.AddInfrastructure(builder.Configuration);
-
 
         // Registering the Identity services with custom User and Role entities
         builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
@@ -57,7 +57,6 @@ public class Program
         .AddEntityFrameworkStores<BookingDbContext>()
         .AddDefaultTokenProviders();
 
-      
         // Configure Serilog
         builder.Host.UseSerilog((context, configuration) =>
         {
@@ -67,7 +66,7 @@ public class Program
 
         var app = builder.Build();
 
-        //Use CORS
+        // Use CORS
         app.UseCors(options =>
         {
             options.AllowAnyOrigin()
@@ -75,12 +74,12 @@ public class Program
                    .AllowAnyHeader();
         });
 
-        //Seed data
-        //using (var scope = app.Services.CreateScope())
-        //{
-        //    var seeder = scope.ServiceProvider.GetRequiredService<IRestaurantSeeder>();
-        //    seeder.Seed();
-        //}
+        // Seed data
+        using (var scope = app.Services.CreateScope())
+        {
+            var seeder = scope.ServiceProvider.GetRequiredService<IBookingSeeder>();
+            await seeder.Seed();  // Await the Seed method
+        }
 
         // Use custom Middleware
         app.UseMiddleware<ErrorHandlingMiddleware>();
