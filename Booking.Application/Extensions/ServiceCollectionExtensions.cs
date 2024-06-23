@@ -1,4 +1,5 @@
 ﻿using Booking.Application.Services.Authentication;
+using Booking.Application.Services.Authorization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,6 +21,7 @@ public static class ServiceCollectionExtensions
             => cfg.RegisterServicesFromAssembly(applicationAssembly));
 
         services.AddScoped<IAuthenticationServices, AuthenticationServices>();
+        services.AddScoped<IAuthorizationServices, AuthorizationServices>();
 
     }
 }

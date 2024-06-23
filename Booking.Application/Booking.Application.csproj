@@ -20,6 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Authentication\Mapping\" />
+    <Folder Include="Authorization\Queries\" />
   </ItemGroup>
 
 </Project>

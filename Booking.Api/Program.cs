@@ -67,7 +67,7 @@ public class Program
 
         var app = builder.Build();
 
-        // Use CORS
+        //Use CORS
         app.UseCors(options =>
         {
             options.AllowAnyOrigin()
