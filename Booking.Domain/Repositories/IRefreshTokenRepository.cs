@@ -2,7 +2,9 @@
 
 namespace Booking.Domain.Repositories;
 
-public interface IRefreshTokenRepository 
+public interface IRefreshTokenRepository
 {
     Task AddAsync(UserRefreshToken userRefreshToken);
+    IQueryable<UserRefreshToken> GetTableNoTracking();
+    Task UpdateAsync(UserRefreshToken entity);
 }
