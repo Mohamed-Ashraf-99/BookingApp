@@ -1,5 +1,7 @@
 ﻿using Booking.Domain.Entities.Identity;
+using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
+using Booking.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -18,6 +20,9 @@ public static class ServiceCollectionExtensions
             => options.UseSqlServer(connectionString)
             .EnableSensitiveDataLogging());
 
+        services.AddScoped<IHotelRepository,HotelRepository>();
+        services.AddScoped<IOfferRepository,OfferRepository>(); 
+        services.AddScoped<IReviewsRepository,ReviewsRepository>();
         // services.AddIdentityCore<User>()
         //.AddEntityFrameworkStores<RestaurantDbContext>();
 
