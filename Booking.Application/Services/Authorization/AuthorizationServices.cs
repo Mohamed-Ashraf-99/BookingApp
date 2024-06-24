@@ -49,6 +49,40 @@ public class AuthorizationServices(RoleManager<IdentityRole<int>> _roleManager,
         }
     }
 
+    public async Task<string> DeleteRoleAsync(int roleId)
+    {
+        try
+        {
+            var role = await _roleManager.FindByIdAsync(roleId.ToString());
+            if (role == null)
+            {
+                _logger.LogWarning($"Role with ID {roleId} not found.");
+                throw new NotFoundException($"Role with ID {roleId} not found");
+            }
+
+            var result = await _roleManager.DeleteAsync(role);
+            if (!result.Succeeded)
+            {
+                var errors = string.Join("; ", result.Errors.Select(e => e.Description));
+                _logger.LogWarning($"Failed to delete role with ID {roleId}: {errors}");
+                return errors;
+            }
+
+            _logger.LogInformation($"Successfully deleted role with ID {roleId}");
+            return "Succeeded";
+        }
+        catch (NotFoundException ex)
+        {
+            _logger.LogError(ex, ex.Message);
+            return $"Error: {ex.Message}";
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An unexpected error occurred while deleting the role");
+            return "An unexpected error occurred. Please try again later.";
+        }
+    }
+
 
     public async Task<bool> IsRoleExists(string roleName) => await _roleManager.RoleExistsAsync(roleName);
 

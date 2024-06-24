@@ -8,4 +8,5 @@ public interface IAuthorizationServices
     Task<string> AddRoleAsync(string roleName);
     Task<bool> IsRoleExists(string roleName);
     Task<string> EditRoleAsync(EditRoleDto roleDto);
+    Task<string> DeleteRoleAsync(int RoleId);
 }

@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Booking.Application.Authorization.Commands.CreateRole;
 using Booking.Application.Authorization.Commands.EditRole;
+using Booking.Application.Authorization.Commands.DeleteRole;
 
 namespace YourNamespace.Controllers
 {
@@ -29,6 +30,13 @@ namespace YourNamespace.Controllers
 
         [HttpPut("Role")]
         public async Task<IActionResult> Edit([FromBody] EditRoleCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpDelete("Role")]
+        public async Task<IActionResult> Delete([FromBody] DeleteRoleCommand command)
         {
             var response = await _mediator.Send(command);
             return Ok(response);
