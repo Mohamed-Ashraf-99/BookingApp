@@ -23,5 +23,6 @@ namespace Booking.Domain.Entities
         public virtual List<Offer> Offers { get; set; }
         public virtual List<Room> Rooms { get; set; }
         public virtual List<Complains>? Complains { get; set; }
+        public virtual List<Images>? Images { get; set; } = new List<Images>();
     }
 }

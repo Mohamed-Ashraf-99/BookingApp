@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Booking.Application.ApplicationUser.Mapping
 {
-    public class ApplicationUserProfile : Profile
+    public class ApplicationUserProfile : Profile   
     {
         public ApplicationUserProfile()
         {
