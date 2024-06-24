@@ -1,12 +1,12 @@
 ﻿using Booking.Application.Services.Authorization;
 using FluentValidation;
 
-namespace Booking.Application.Authorization.Commands;
+namespace Booking.Application.Authorization.Commands.CreateRole;
 
 public class CreateRoleCommandValidator : AbstractValidator<CreateRoleCommand>
 {
     private readonly IAuthorizationServices _authorizationServices;
-    public  CreateRoleCommandValidator(IAuthorizationServices authorizationServices)
+    public CreateRoleCommandValidator(IAuthorizationServices authorizationServices)
     {
         _authorizationServices = authorizationServices;
 
@@ -14,6 +14,6 @@ public class CreateRoleCommandValidator : AbstractValidator<CreateRoleCommand>
             .NotEmpty().WithMessage("Role name is required!")
             .NotNull().WithMessage("Role name is required!");
 
-        
+
     }
 }

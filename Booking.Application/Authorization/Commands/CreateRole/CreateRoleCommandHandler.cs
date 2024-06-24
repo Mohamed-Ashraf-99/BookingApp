@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 
-namespace Booking.Application.Authorization.Commands;
+namespace Booking.Application.Authorization.Commands.CreateRole;
 
 public class CreateRoleCommandHandler(ILogger<CreateRoleCommandHandler> _logger,
     IAuthorizationServices _authorizationServices) : IRequestHandler<CreateRoleCommand, string>

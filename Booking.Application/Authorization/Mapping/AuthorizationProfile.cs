@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Booking.Application.Authorization.Commands;
+using Booking.Application.Authorization.Commands.CreateRole;
 using Microsoft.AspNetCore.Identity;
 
 namespace Booking.Application.Authorization.Mapping;
