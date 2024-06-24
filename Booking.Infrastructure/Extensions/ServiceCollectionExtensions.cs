@@ -86,7 +86,7 @@ namespace Booking.Infrastructure.Extensions
             services.AddScoped<IBookingSeeder, BookingSeeder>();
             #region RefreshToken
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
-            
+
             #endregion
         }
     }

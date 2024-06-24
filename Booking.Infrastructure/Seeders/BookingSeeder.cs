@@ -2,10 +2,7 @@
 using Booking.Domain.Entities.Enums;
 using Booking.Domain.Entities.Identity;
 using Booking.Infrastructure.Persistence;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace Booking.Infrastructure.Seeders
 {
@@ -126,6 +123,14 @@ namespace Booking.Infrastructure.Seeders
                     _context.WishList.AddRange(wishLists);
                     await _context.SaveChangesAsync();
                 }
+
+                if (!_context.Roles.Any())
+                {
+                    var roles = GetRoles();
+                    _context.Roles.AddRange(roles);
+                    await _context.SaveChangesAsync();
+                }
+
             }
         }
 
@@ -143,7 +148,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Admin>
             {
-                new Admin { User = _context.Users.Find(10) }
+                new Admin { User = _context.Users.Find(10) },
+                new Admin { User = _context.Users.Find(13) }
             };
         }
 
@@ -260,6 +266,16 @@ namespace Booking.Infrastructure.Seeders
             {
                 new WishList {  ClientId = 1, Hotels = new List<Hotel> { _context.Hotels.Find(2) }} ,
                 new WishList {  ClientId = 2, Hotels = new List<Hotel> { _context.Hotels.Find(3) }}
+            };
+        }
+
+        private IEnumerable<IdentityRole<int>> GetRoles()
+        {
+            return new List<IdentityRole<int>>
+            {
+              new IdentityRole<int>(){  Name = "Admin" },
+              new IdentityRole<int>(){  Name = "User" },
+              new IdentityRole<int>(){  Name = "Admin" },
             };
         }
     }

@@ -5,8 +5,11 @@ using Booking.Domain.Entities.Identity;
 using Booking.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
-using Microsoft.AspNetCore.Hosting;
 using Booking.Infrastructure.Seeders;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 
 namespace Booking.Api;
 
@@ -17,10 +20,8 @@ public class Program
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
-
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
 
         // Register custom middleware
         builder.Services.AddScoped<ErrorHandlingMiddleware>();
@@ -33,9 +34,6 @@ public class Program
         // Registering the Identity services with custom User and Role entities
         builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
         {
-            // Require a confirmed email to log in
-            //options.SignIn.RequireConfirmedEmail = true;
-
             // Password settings (customize as needed)
             options.Password.RequireDigit = true;
             options.Password.RequireLowercase = true;
@@ -57,12 +55,15 @@ public class Program
         .AddEntityFrameworkStores<BookingDbContext>()
         .AddDefaultTokenProviders();
 
+        builder.Services.AddAuthorization();
+
         // Configure Serilog
         builder.Host.UseSerilog((context, configuration) =>
         {
-            configuration
-                .ReadFrom.Configuration(context.Configuration);
+            configuration.ReadFrom.Configuration(context.Configuration);
         });
+
+       
 
         var app = builder.Build();
 
@@ -78,7 +79,7 @@ public class Program
         using (var scope = app.Services.CreateScope())
         {
             var seeder = scope.ServiceProvider.GetRequiredService<IBookingSeeder>();
-            await seeder.Seed();  // Await the Seed method
+            await seeder.Seed();
         }
 
         // Use custom Middleware
@@ -94,11 +95,16 @@ public class Program
 
         app.UseHttpsRedirection();
 
+        app.UseRouting();
+
         app.UseAuthentication();
 
         app.UseAuthorization();
 
-        app.MapControllers();
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
 
         app.Run();
     }

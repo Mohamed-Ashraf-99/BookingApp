@@ -6,7 +6,10 @@ namespace Booking.Application.Services.Authentication;
 
 public interface IAuthenticationServices
 {
-    Task<JwtAuthResult> GetJWTToken(User user);
-    Task<JwtAuthResult> GetRefreshToken(string accessToken, string refreshToken);
-    Task<string> ValidateToken(string accessToken);
+    public Task<JwtAuthResult> GetJWTToken(User user);
+    public JwtSecurityToken ReadJWTToken(string accessToken);
+    public Task<(string, DateTime?)> ValidateDetails(JwtSecurityToken jwtToken, string AccessToken, string RefreshToken);
+    public Task<JwtAuthResult> GetRefreshToken(User user, JwtSecurityToken jwtToken, DateTime? expiryDate, string refreshToken);
+    public Task<string> ValidateToken(string AccessToken);
+   
 }

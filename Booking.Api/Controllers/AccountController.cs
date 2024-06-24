@@ -5,6 +5,7 @@ using Booking.Application.ApplicationUser.Commands.UpdateUser;
 using Booking.Application.ApplicationUser.Queries.GetAllUsers;
 using Booking.Application.ApplicationUser.Queries.GetUserById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Controllers;

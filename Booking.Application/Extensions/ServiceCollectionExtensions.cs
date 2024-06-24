@@ -3,6 +3,7 @@ using Booking.Application.Services.Authorization;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
+using SchoolProject.Service.Implementations;
 
 namespace Booking.Application.Extensions;
 
