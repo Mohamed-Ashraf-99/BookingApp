@@ -1,7 +1,11 @@
-﻿using Booking.Application.ApplicationUser.Commands.Register;
+﻿using Booking.Application.ApplicationUser.Commands.ChangePassword;
+using Booking.Application.ApplicationUser.Commands.DeleteUser;
+using Booking.Application.ApplicationUser.Commands.Register;
+using Booking.Application.ApplicationUser.Commands.UpdateUser;
 using Booking.Application.ApplicationUser.Queries.GetAllUsers;
 using Booking.Application.ApplicationUser.Queries.GetUserById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Booking.Api.Controllers;
@@ -34,4 +38,29 @@ public class AccountController(IMediator _mediator) : ControllerBase
         return Ok(user);
     }
 
+    [HttpPut("{Id}")]
+    public async Task<IActionResult> Update([FromBody]UpdateUserCommand updateUserCommand)
+    {
+        if (ModelState.IsValid)
+        {
+            var result = await _mediator.Send(updateUserCommand);
+            return Ok(result);
+        }
+        return BadRequest();
+    }
+
+    [HttpDelete("{Id}")]
+    public async Task<IActionResult> Delete([FromRoute] int Id)
+    {
+        var result =await _mediator.Send(new DeleteUserCommand(Id));
+        return NoContent();
+    }
+
+    [HttpPut("ChangePassword/{Id}")]
+    public async Task<IActionResult> ChangePassword([FromRoute]int Id, [FromBody] ChangePasswordCommand changePasswordCommand)
+    {
+        changePasswordCommand.Id = Id;
+        var result = await _mediator.Send(changePasswordCommand);
+        return Ok(result);
+    }
 }

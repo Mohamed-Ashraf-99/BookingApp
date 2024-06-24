@@ -1,14 +1,16 @@
-﻿using Booking.Domain.Entities.Identity;
+﻿using Booking.Application.Authentication.Helpers;
 using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
 using Booking.Infrastructure.Repositories;
-using Microsoft.AspNetCore.Identity;
+using Booking.Infrastructure.Seeders;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System.Text;
 
-
-namespace Booking.Infrastructure.Extensions;
 
 public static class ServiceCollectionExtensions
 {
@@ -16,19 +18,43 @@ public static class ServiceCollectionExtensions
     {
         var connectionString = configuration.GetConnectionString("RestaurantsDb");
 
-        services.AddDbContext<BookingDbContext>(options
-            => options.UseSqlServer(connectionString)
-            .EnableSensitiveDataLogging());
+        services.AddDbContext<BookingDbContext>(options =>
+            options.UseSqlServer(connectionString)
+                   .EnableSensitiveDataLogging());
 
-        services.AddScoped<IHotelRepository,HotelRepository>();
-        services.AddScoped<IOfferRepository,OfferRepository>(); 
-        services.AddScoped<IReviewsRepository,ReviewsRepository>();
-        services.AddScoped<IWishListRepository, WishListRepository>();
-        // services.AddIdentityCore<User>()
-        //.AddEntityFrameworkStores<RestaurantDbContext>();
+        
+        // Swagger Configuration
+        services.AddSwaggerGen(c =>
+        {
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "School Project", Version = "v1" });
+            c.EnableAnnotations();
 
-        //services.AddScoped<IRestaurantSeeder, RestaurantSeeder>();
-        //services.AddScoped<IRestaurantsRepository, RestaurantsRepository>();
-        //services.AddScoped<IDishRepository, DishRepository>();
+            c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
+            {
+                Description = "JWT Authorization header using the Bearer scheme (Example: 'Bearer 12345abcdef')",
+                Name = "Authorization",
+                In = ParameterLocation.Header,
+                Type = SecuritySchemeType.ApiKey,
+                Scheme = JwtBearerDefaults.AuthenticationScheme
+            });
+
+            c.AddSecurityRequirement(new OpenApiSecurityRequirement
+            {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = JwtBearerDefaults.AuthenticationScheme
+                        }
+                    },
+                    Array.Empty<string>()
+                }
+            });
+        });
+
+        services.AddScoped<IBookingSeeder, BookingSeeder>();
+        services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
     }
 }

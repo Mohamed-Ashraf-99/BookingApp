@@ -11,9 +11,10 @@ namespace Booking.Domain.Entities
         public int Id { get; set; }
         public decimal? Rate { get; set; }
         public string? Comment { get; set; }
-        public Hotel ?Hotel { get; set; }
+        public Hotel? Hotel { get; set; }
         public int HotelId { get; set; }
         public Client? Client { get; set; }
         public int? ClientId { get; set; }
+        public DateTime? Date { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Booking.Domain.Entities.Identity;
+using Microsoft.EntityFrameworkCore;
 
 
 namespace Booking.Application.ApplicationUser.Commands.Register;
@@ -34,6 +35,11 @@ public class RegisterUserCommandHandler(ILogger<RegisterUserCommandHandler> _log
             _logger.LogError($"User registration failed for {request.UserName}. Errors: {errors}");
             return $"Registration failed: {errors}";
         }
+        var users = await _userManager.Users.ToListAsync();
+        if (users.Count > 0)
+            await _userManager.AddToRoleAsync(user, "User");
+        else
+            await _userManager.AddToRoleAsync(user, "Admin");
 
         _logger.LogInformation($"User {request.UserName} successfully registered.");
         return "Registration succeeded";

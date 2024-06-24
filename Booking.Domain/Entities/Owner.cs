@@ -15,5 +15,6 @@ namespace Booking.Domain.Entities
         public virtual List<Offer>?  Offers { get; set; }
         public virtual List<Restaurant>?  Restaurants { get; set; }
         public bool? IsDeleted { get; set; }
+        public bool? IsActive { get; set; }
     }
 }

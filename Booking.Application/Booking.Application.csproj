@@ -10,6 +10,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
     <PackageReference Include="MediatR" Version="12.3.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.6" />
     <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.1" />
   </ItemGroup>
 
@@ -18,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ApplicationUser\Commands\UpdateUser\" />
+    <Folder Include="Authentication\Mapping\" />
   </ItemGroup>
 
 </Project>
