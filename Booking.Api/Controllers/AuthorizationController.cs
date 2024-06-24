@@ -1,27 +1,29 @@
-﻿using Booking.Application.Authorization.Commands;
+﻿using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+using Booking.Application.Authorization.Commands;
 
-namespace Booking.Api.Controllers;
-
-[Route("api/[controller]")]
-[ApiController]
-[Authorize]
-public class AuthorizationController : ControllerBase
+namespace YourNamespace.Controllers
 {
-    private readonly IMediator _mediator;
-
-    public AuthorizationController(IMediator mediator)
+    [Route("api/[controller]")]
+    [ApiController]
+    [Authorize(Roles = "Admin")]
+    public class AuthorizationController : ControllerBase
     {
-        _mediator = mediator;
-    }
+        private readonly IMediator _mediator;
 
-    [HttpPost("Role")]
-    [Authorize(Roles = "User")]
-    public async Task<IActionResult> Create([FromBody] CreateRoleCommand command)
-    {
-        var response = await _mediator.Send(command);
-        return Ok(response);
+        public AuthorizationController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
+
+        // POST: api/Authorization/Role
+        [HttpPost("Role")]
+        public async Task<IActionResult> Create([FromBody] CreateRoleCommand command)
+        {
+            var response = await _mediator.Send(command);
+            return Ok(response);
+        }
     }
 }

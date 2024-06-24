@@ -38,6 +38,8 @@ public class RegisterUserCommandHandler(ILogger<RegisterUserCommandHandler> _log
         var users = await _userManager.Users.ToListAsync();
         if (users.Count > 0)
             await _userManager.AddToRoleAsync(user, "User");
+        else
+            await _userManager.AddToRoleAsync(user, "Admin");
 
         _logger.LogInformation($"User {request.UserName} successfully registered.");
         return "Registration succeeded";

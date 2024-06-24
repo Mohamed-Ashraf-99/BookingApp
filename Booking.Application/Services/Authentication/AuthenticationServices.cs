@@ -68,9 +68,29 @@ public class AuthenticationServices : IAuthenticationServices
             _jwtSettings.Audience,
             claims,
             expires: DateTime.Now.AddDays(_jwtSettings.AccessTokenExpireDate),
-            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret)), SecurityAlgorithms.HmacSha256Signature));
+            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret)), SecurityAlgorithms.HmacSha256Signature));
         var accessToken = new JwtSecurityTokenHandler().WriteToken(jwtToken);
         return (jwtToken, accessToken);
+    }
+
+      public async Task<List<Claim>> GetClaims(User user)
+    {
+        var roles = await _userManager.GetRolesAsync(user);
+        var claims = new List<Claim>()
+        {
+            new Claim(ClaimTypes.Name,user.UserName),
+            new Claim(ClaimTypes.NameIdentifier,user.UserName),
+            new Claim(ClaimTypes.Email,user.Email),
+            new Claim(nameof(UserClaimModel.PhoneNumber), user.PhoneNumber),
+            new Claim(nameof(UserClaimModel.Id), user.Id.ToString())
+        };
+        foreach (var role in roles)
+        {
+            claims.Add(new Claim(ClaimTypes.Role, role));
+        }
+        var userClaims = await _userManager.GetClaimsAsync(user);
+        claims.AddRange(userClaims);
+        return claims;
     }
 
     private RefreshToken GetRefreshToken(string username)
@@ -90,25 +110,7 @@ public class AuthenticationServices : IAuthenticationServices
         randomNumberGenerate.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);
     }
-    public async Task<List<Claim>> GetClaims(User user)
-    {
-        var roles = await _userManager.GetRolesAsync(user);
-        var claims = new List<Claim>()
-        {
-            new Claim(ClaimTypes.Name,user.UserName),
-            new Claim(ClaimTypes.NameIdentifier,user.UserName),
-            new Claim(ClaimTypes.Email,user.Email),
-            new Claim(nameof(UserClaimModel.PhoneNumber), user.PhoneNumber),
-            new Claim(nameof(UserClaimModel.Id), user.Id.ToString())
-        };
-        foreach (var role in roles)
-        {
-            claims.Add(new Claim(ClaimTypes.Role, role));
-        }
-        var userClaims = await _userManager.GetClaimsAsync(user);
-        claims.AddRange(userClaims);
-        return claims;
-    }
+  
 
     public async Task<JwtAuthResult> GetRefreshToken(User user, JwtSecurityToken jwtToken, DateTime? expiryDate, string refreshToken)
     {
