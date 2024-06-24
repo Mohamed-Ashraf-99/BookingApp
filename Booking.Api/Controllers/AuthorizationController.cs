@@ -7,12 +7,15 @@ using Booking.Application.Authorization.Commands.EditRole;
 using Booking.Application.Authorization.Commands.DeleteRole;
 using Booking.Application.Authorization.Queries.GetAllRoles;
 using Booking.Application.Authorization.Queries.GitRoleById;
+using Booking.Application.Authorization.Queries.ManageUserRoles;
+using Booking.Application.ApplicationUser.Commands.UpdateUser;
+using Booking.Application.Authorization.Commands.UpdateUserRoles;
 
 namespace YourNamespace.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-[Authorize(Roles = "Admin")]
+//[Authorize(Roles = "Admin")]
 public class AuthorizationController : ControllerBase
 {
     private readonly IMediator _mediator;
@@ -55,6 +58,21 @@ public class AuthorizationController : ControllerBase
     public async Task<IActionResult> GetById([FromRoute]int id)
     {
         var response = await _mediator.Send(new GetRoleByIdQuery(id));
+        return Ok(response);
+    }
+
+    [HttpGet("Role/User/{id}")]
+    public async Task<IActionResult> GetUserRoles([FromRoute] int id)
+    {
+        var response = await _mediator.Send(new ManageUserRolesQuery(id));
+        return Ok(response);
+    }
+
+
+    [HttpPut("Role/User")]
+    public async Task<IActionResult> UpdateUserRoles([FromBody] UpdateUserRolesCommand command)
+    {
+        var response = await _mediator.Send(command);
         return Ok(response);
     }
 }
