@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Booking.Application.Authorization.Commands.CreateRole;
 using Booking.Application.Authorization.Commands.EditRole;
 using Booking.Application.Authorization.Commands.DeleteRole;
+using Booking.Application.Authorization.Queries.GetAllRoles;
 
 namespace YourNamespace.Controllers
 {
@@ -39,6 +40,13 @@ namespace YourNamespace.Controllers
         public async Task<IActionResult> Delete([FromBody] DeleteRoleCommand command)
         {
             var response = await _mediator.Send(command);
+            return Ok(response);
+        }
+
+        [HttpGet("Role")]
+        public async Task<IActionResult> GetAll()
+        {
+            var response = await _mediator.Send(new GetRoleListQuery());
             return Ok(response);
         }
     }

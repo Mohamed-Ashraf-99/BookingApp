@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Authentication\Mapping\" />
-    <Folder Include="Authorization\Queries\" />
+    <Folder Include="Authorization\Queries\GitRoleById\" />
   </ItemGroup>
 
 </Project>

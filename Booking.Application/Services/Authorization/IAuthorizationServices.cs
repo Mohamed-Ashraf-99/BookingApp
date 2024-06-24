@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Authorization.Commands.EditRole;
 using Booking.Application.Authorization.Commands.EditRole.Dto;
+using Booking.Application.Authorization.Queries.GetAllRoles.Dto;
 
 namespace Booking.Application.Services.Authorization;
 
@@ -9,4 +10,5 @@ public interface IAuthorizationServices
     Task<bool> IsRoleExists(string roleName);
     Task<string> EditRoleAsync(EditRoleDto roleDto);
     Task<string> DeleteRoleAsync(int RoleId);
+    Task<IEnumerable<GetRolesDto>> GetAllRolesAsync();
 }

@@ -1,12 +1,16 @@
-﻿using Booking.Application.Authorization.Commands.EditRole.Dto;
+﻿using AutoMapper;
+using Booking.Application.Authorization.Commands.EditRole.Dto;
+using Booking.Application.Authorization.Queries.GetAllRoles.Dto;
 using Booking.Domain.Exceptions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 
 namespace Booking.Application.Services.Authorization;
 
 public class AuthorizationServices(RoleManager<IdentityRole<int>> _roleManager,
-    ILogger<AuthorizationServices> _logger) : IAuthorizationServices
+    ILogger<AuthorizationServices> _logger,
+    IMapper _mapper) : IAuthorizationServices
 {
     public async Task<string> AddRoleAsync(string roleName)
     {
@@ -86,4 +90,14 @@ public class AuthorizationServices(RoleManager<IdentityRole<int>> _roleManager,
 
     public async Task<bool> IsRoleExists(string roleName) => await _roleManager.RoleExistsAsync(roleName);
 
+    public async Task<IEnumerable<GetRolesDto>> GetAllRolesAsync()
+    {
+        var rolesList = await _roleManager.Roles.ToListAsync();
+        if(rolesList is null || !rolesList.Any())
+            throw new NotFoundException($"There are no roles found");
+
+        var result = _mapper.Map<IEnumerable<GetRolesDto>>(rolesList);
+        return result;
+        throw new NotImplementedException();
+    }
 }
