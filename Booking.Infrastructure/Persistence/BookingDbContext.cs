@@ -28,6 +28,7 @@ public class BookingDbContext(DbContextOptions options) : IdentityDbContext<User
     public DbSet<WishList> WishList { get; set; }
     public DbSet<UserRefreshToken> UsersRefreshTokens { get; set; }
 
+    public DbSet<Images> images { get; set; }
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<User>()
