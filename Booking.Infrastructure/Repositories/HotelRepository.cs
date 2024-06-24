@@ -32,14 +32,22 @@ namespace Booking.Infrastructure.Repositories
         public async Task<Hotel> GetHotelByIdAsync(int hotelId)
         {
             var hotel = await _context.Hotels
-                .Include(h => h.Images)
-                .Include(h => h.Reviews)
-                .Include(h => h.Restaurants)
-                .Include(h => h.Owner)
-                .Include(h => h.Complains)
-                .Include(h => h.Rooms)
-                .Include(h => h.Offers)
-                .FirstOrDefaultAsync(h => h.Id == hotelId && h.IsDeleted != true);
+            .Include(h => h.Images)
+            .Include(h => h.Reviews)
+            .Include(h => h.Restaurants)
+            .Include(h => h.Owner)
+            .Include(h => h.Complains)
+            .Include(h => h.Rooms)
+                .ThenInclude(h => h.Packages)
+                .ThenInclude(h => h.RoomFacilities)
+            .Include(h => h.Rooms)
+                .ThenInclude(r => r.Packages)
+                .ThenInclude(p => p.Meals)
+            .Include(h => h.Rooms)
+            .ThenInclude(r => r.Packages)
+            .ThenInclude(p => p.PackageFacilities)
+            .Include(h => h.Offers)
+            .FirstOrDefaultAsync(h => h.Id == hotelId && h.IsDeleted != true);
             return hotel;
         }
 
@@ -60,11 +68,11 @@ namespace Booking.Infrastructure.Repositories
             var trendingHotels = await _context.Hotels
                 .Include(h => h.Images)
                 .Include(h => h.Reviews)
-                .Include(h => h.Restaurants)
+                //.Include(h => h.Restaurants)
                 .Include(h => h.Owner)
-                .Include(h => h.Complains)
-                .Include(h => h.Rooms)
-                .Include(h => h.Offers)
+                //.Include(h => h.Complains)
+                //.Include(h => h.Rooms)
+                //.Include(h => h.Offers)
                 .Where(h => h.IsDeleted != true && h.Reviews.Average(r => r.Rate) > overallAverageRating)
                 .ToListAsync();
 

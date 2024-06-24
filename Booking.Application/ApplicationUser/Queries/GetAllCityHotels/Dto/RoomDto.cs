@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Entities;
+﻿using Booking.Application.ApplicationUser.Queries.GetHotelById.Dto;
+using Booking.Domain.Entities;
 using Booking.Domain.Entities.Enums;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,6 @@ namespace Booking.Application.ApplicationUser.Queries.GetAllCityHotels.Dto
         public Reservation Reservation { get; set; }
         public int? ReservationId { get; set; }
         public int HotelId { get; set; }
-        public List<Package> Packages { get; set; }
+        public List<PackageDto> Packages { get; set; }
     }
 }

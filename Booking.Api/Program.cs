@@ -107,11 +107,11 @@ public class Program
         });
 
         //// Seed data
-        using (var scope = app.Services.CreateScope())
-        {
-            var seeder = scope.ServiceProvider.GetRequiredService<IBookingSeeder>();
-            await seeder.Seed();
-        }
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    var seeder = scope.ServiceProvider.GetRequiredService<IBookingSeeder>();
+        //    await seeder.Seed();
+        //}
 
         // Use custom Middleware
         app.UseMiddleware<ErrorHandlingMiddleware>();
