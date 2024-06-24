@@ -88,7 +88,8 @@ public class AuthorizationServices(RoleManager<IdentityRole<int>> _roleManager,
     }
 
 
-    public async Task<bool> IsRoleExists(string roleName) => await _roleManager.RoleExistsAsync(roleName);
+    public async Task<bool> IsRoleExists(string roleName)
+        => await _roleManager.RoleExistsAsync(roleName);
 
     public async Task<IEnumerable<GetRolesDto>> GetAllRolesAsync()
     {
@@ -99,5 +100,17 @@ public class AuthorizationServices(RoleManager<IdentityRole<int>> _roleManager,
         var result = _mapper.Map<IEnumerable<GetRolesDto>>(rolesList);
         return result;
         throw new NotImplementedException();
+    }
+
+    public async Task<GetRolesDto> GetRoleByIdAsync(int roleId)
+    {
+        var role = await _roleManager.FindByIdAsync(roleId.ToString());
+        if (role == null)
+        {
+            _logger.LogWarning($"Role with ID {roleId} not found.");
+            throw new NotFoundException($"Role with ID {roleId} not found");
+        }
+        var result = _mapper.Map<GetRolesDto>(role);
+        return result;
     }
 }

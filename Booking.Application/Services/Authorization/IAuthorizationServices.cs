@@ -11,4 +11,5 @@ public interface IAuthorizationServices
     Task<string> EditRoleAsync(EditRoleDto roleDto);
     Task<string> DeleteRoleAsync(int RoleId);
     Task<IEnumerable<GetRolesDto>> GetAllRolesAsync();
+    Task<GetRolesDto> GetRoleByIdAsync(int roleId);
 }
