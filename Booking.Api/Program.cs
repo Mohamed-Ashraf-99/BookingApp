@@ -106,7 +106,7 @@ public class Program
                    .AllowAnyHeader();
         });
 
-        // Seed data
+        //// Seed data
         using (var scope = app.Services.CreateScope())
         {
             var seeder = scope.ServiceProvider.GetRequiredService<IBookingSeeder>();

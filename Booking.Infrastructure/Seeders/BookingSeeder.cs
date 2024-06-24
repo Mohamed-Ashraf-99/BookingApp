@@ -148,8 +148,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Admin>
             {
-                new Admin { User = _context.Users.Find(10) },
-                new Admin { User = _context.Users.Find(13) }
+                new Admin { User = _context.Users.Find(1) },
+                new Admin { User = _context.Users.Find(2) }
             };
         }
 
@@ -157,8 +157,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Client>
             {
-                new Client { User = _context.Users.Find(11), Address = new Address { City = "New York", Street = "5th Avenue", PostalCode = "10001" } },
-                new Client { User = _context.Users.Find(12), Address = new Address { City = "Los Angeles", Street = "Sunset Boulevard", PostalCode = "90001" } }
+                new Client { User = _context.Users.Find(1), Address = new Address { City = "New York", Street = "5th Avenue", PostalCode = "10001" } },
+                new Client { User = _context.Users.Find(2), Address = new Address { City = "Los Angeles", Street = "Sunset Boulevard", PostalCode = "90001" } }
             };
         }
 
@@ -166,7 +166,7 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Owner>
             {
-                new Owner { User = _context.Users.Find(10), IsActive = true }
+                new Owner { User = _context.Users.Find(2), IsActive = true }
             };
         }
 
@@ -183,8 +183,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Restaurant>
             {
-                new Restaurant { Name = "The Palm Court", HotelId = 2, OwnerId = 1, IsDeleted = false, Cuisine = Cuisine.French, Ambience = Ambience.Formal, DietaryOptions = DietaryOptions.Vegetarian | DietaryOptions.GlutenFree, OpenFor = OpenFor.Breakfast | OpenFor.Lunch | OpenFor.Dinner },
-                new Restaurant { Name = "Polo Lounge", HotelId = 3, OwnerId = 1, IsDeleted = false, Cuisine = Cuisine.American, Ambience = Ambience.Casual, DietaryOptions = DietaryOptions.None, OpenFor = OpenFor.Breakfast | OpenFor.Lunch | OpenFor.Dinner }
+                new Restaurant { Name = "The Palm Court", HotelId = 1, OwnerId = 1, IsDeleted = false, Cuisine = Cuisine.French, Ambience = Ambience.Formal, DietaryOptions = DietaryOptions.Vegetarian | DietaryOptions.GlutenFree, OpenFor = OpenFor.Breakfast | OpenFor.Lunch | OpenFor.Dinner },
+                new Restaurant { Name = "Polo Lounge", HotelId = 2, OwnerId = 1, IsDeleted = false, Cuisine = Cuisine.American, Ambience = Ambience.Casual, DietaryOptions = DietaryOptions.None, OpenFor = OpenFor.Breakfast | OpenFor.Lunch | OpenFor.Dinner }
             };
         }
 
@@ -192,8 +192,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Room>
             {
-                new Room { RoomType = RoomType.Single, Description = "Single Room", Price = 500, NumberOfBeds = 1, HotelId = 2 },
-                new Room { RoomType = RoomType.Double, Description = "Double Room", Price = 800, NumberOfBeds = 2, HotelId = 3 }
+                new Room { RoomType = RoomType.Single, Description = "Single Room", Price = 500, NumberOfBeds = 1, HotelId = 1 },
+                new Room { RoomType = RoomType.Double, Description = "Double Room", Price = 800, NumberOfBeds = 2, HotelId = 2 }
             };
         }
 
@@ -228,8 +228,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Offer>
             {
-                new Offer { Description = "Summer Sale", StartDate = DateTime.Now.AddDays(-10), EndDate = DateTime.Now.AddDays(10), Discount = 0.1m, HotelId = 2, IsDeleted = false },
-                new Offer { Description = "Winter Special", StartDate = DateTime.Now.AddDays(-20), EndDate = DateTime.Now.AddDays(20), Discount = 0.2m, HotelId = 3, IsDeleted = false }
+                new Offer { Description = "Summer Sale", StartDate = DateTime.Now.AddDays(-10), EndDate = DateTime.Now.AddDays(10), Discount = 0.1m, HotelId = 1, IsDeleted = false, OwnerId = 1 },
+                new Offer { Description = "Winter Special", StartDate = DateTime.Now.AddDays(-20), EndDate = DateTime.Now.AddDays(20), Discount = 0.2m, HotelId = 2, IsDeleted = false, OwnerId = 1 }
             };
         }
 
@@ -237,8 +237,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Complains>
             {
-                new Complains { Discription = "Room not clean", IsSolved = false, Date = DateTime.Now, HotelId = 2, AdminId = 1, ClientId = 1 },
-                new Complains { Discription = "No hot water", IsSolved = true, Date = DateTime.Now, HotelId = 3, AdminId = 1, ClientId = 2 }
+                new Complains { Discription = "Room not clean", IsSolved = false, Date = DateTime.Now, HotelId = 1, AdminId = 1, ClientId = 1 },
+                new Complains { Discription = "No hot water", IsSolved = true, Date = DateTime.Now, HotelId = 2, AdminId = 1, ClientId = 2 }
             };
         }
 
@@ -255,8 +255,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Reviews>
             {
-                new Reviews {Rate = 5, Comment = "Excellent stay!", Date = DateTime.Now, HotelId = 2, ClientId = 1 },
-                new Reviews {Rate = 4, Comment = "Very good experience.", Date = DateTime.Now, HotelId = 3, ClientId = 2 }
+                new Reviews {Rate = 5, Comment = "Excellent stay!", Date = DateTime.Now, HotelId = 1, ClientId = 1 },
+                new Reviews {Rate = 4, Comment = "Very good experience.", Date = DateTime.Now, HotelId = 2, ClientId = 2 }
             };
         }
 
@@ -264,8 +264,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<WishList>
             {
-                new WishList {  ClientId = 1, Hotels = new List<Hotel> { _context.Hotels.Find(2) }} ,
-                new WishList {  ClientId = 2, Hotels = new List<Hotel> { _context.Hotels.Find(3) }}
+                new WishList {  ClientId = 1, Hotels = new List<Hotel> { _context.Hotels.Find(1) }} ,
+                new WishList {  ClientId = 2, Hotels = new List<Hotel> { _context.Hotels.Find(2) }}
             };
         }
 

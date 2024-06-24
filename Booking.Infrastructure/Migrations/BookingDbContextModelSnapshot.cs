@@ -268,7 +268,7 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("OwnerId")
+                    b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -914,12 +914,14 @@ namespace Booking.Infrastructure.Migrations
                     b.HasOne("Booking.Domain.Entities.Hotel", "Hotel")
                         .WithMany("Offers")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Booking.Domain.Entities.Owner", "Owner")
                         .WithMany("Offers")
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Hotel");
 

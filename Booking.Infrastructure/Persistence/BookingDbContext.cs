@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using System.Data;
+using System.Reflection.Emit;
 
 namespace Booking.Infrastructure.Persistence;
 
@@ -39,6 +40,20 @@ public class BookingDbContext(DbContextOptions options) : IdentityDbContext<User
 
         builder.Entity<Client>()
          .OwnsOne(res => res.Address);
+
+        // Configure the Offer-Owner relationship
+        builder.Entity<Offer>()
+            .HasOne(o => o.Owner)
+            .WithMany(owner => owner.Offers)
+            .HasForeignKey(o => o.OwnerId)
+            .OnDelete(DeleteBehavior.Restrict); // Disable cascade delete
+
+        // Configure the Offer-Hotel relationship
+        builder.Entity<Offer>()
+            .HasOne(o => o.Hotel)
+            .WithMany(h => h.Offers)
+            .HasForeignKey(o => o.HotelId)
+            .OnDelete(DeleteBehavior.Restrict); // Disable cascade delete
 
         base.OnModelCreating(builder);
     }
