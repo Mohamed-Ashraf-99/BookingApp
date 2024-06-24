@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20240623203959_Edit-Entity")]
-    partial class EditEntity
+    [Migration("20240624185040_edit-offers")]
+    partial class editoffers
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -202,6 +202,31 @@ namespace Booking.Infrastructure.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("Booking.Domain.Entities.Images", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("HotelID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("IsMain")
+                        .HasColumnType("int");
+
+                    b.Property<string>("source")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("HotelID");
+
+                    b.ToTable("images");
+                });
+
             modelBuilder.Entity("Booking.Domain.Entities.Meals", b =>
                 {
                     b.Property<int>("Id")
@@ -246,7 +271,7 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("OwnerId")
+                    b.Property<int>("OwnerId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDate")
@@ -876,17 +901,30 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("Address");
                 });
 
+            modelBuilder.Entity("Booking.Domain.Entities.Images", b =>
+                {
+                    b.HasOne("Booking.Domain.Entities.Hotel", "Hotel")
+                        .WithMany("Images")
+                        .HasForeignKey("HotelID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Hotel");
+                });
+
             modelBuilder.Entity("Booking.Domain.Entities.Offer", b =>
                 {
                     b.HasOne("Booking.Domain.Entities.Hotel", "Hotel")
                         .WithMany("Offers")
                         .HasForeignKey("HotelId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Booking.Domain.Entities.Owner", "Owner")
                         .WithMany("Offers")
-                        .HasForeignKey("OwnerId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Hotel");
 
@@ -1111,6 +1149,8 @@ namespace Booking.Infrastructure.Migrations
             modelBuilder.Entity("Booking.Domain.Entities.Hotel", b =>
                 {
                     b.Navigation("Complains");
+
+                    b.Navigation("Images");
 
                     b.Navigation("Offers");
 

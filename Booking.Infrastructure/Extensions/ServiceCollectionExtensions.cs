@@ -56,5 +56,10 @@ public static class ServiceCollectionExtensions
 
         services.AddScoped<IBookingSeeder, BookingSeeder>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IWishListRepository, WishListRepository>();
+        services.AddScoped<IHotelRepository, HotelRepository>();
+        services.AddScoped<IOfferRepository, OfferRepository>();
+        services.AddScoped<IReviewsRepository, ReviewsRepository>();
+
     }
 }
