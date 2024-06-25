@@ -5,15 +5,12 @@ using Booking.Domain.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
 using Booking.Infrastructure.Seeders;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
 using Booking.Application.Authentication.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using Microsoft.Extensions.Configuration;
 using Booking.Application.Emails.Helpers;
+using Booking.Application.Filters;
 
 namespace Booking.Api;
 
@@ -54,7 +51,7 @@ public class Program
             options.User.RequireUniqueEmail = true;
 
             // Sign-in settings 
-            options.SignIn.RequireConfirmedPhoneNumber = false;
+            options.SignIn.RequireConfirmedEmail = false;
         })
         .AddEntityFrameworkStores<BookingDbContext>()
         .AddDefaultTokenProviders();
@@ -80,16 +77,17 @@ public class Program
            x.RequireHttpsMetadata = false;
            x.TokenValidationParameters = new TokenValidationParameters
            {
-                       ValidateIssuer = jwtSettings.ValidateIssuer,
-                       ValidIssuers = new[] { jwtSettings.Issuer },
-                       ValidateIssuerSigningKey = jwtSettings.ValidateIssuerSigningKey,
-                       IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+               ValidateIssuer = jwtSettings.ValidateIssuer,
+               ValidIssuers = new[] { jwtSettings.Issuer },
+               ValidateIssuerSigningKey = jwtSettings.ValidateIssuerSigningKey,
+               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
                        .GetBytes(jwtSettings.Secret)),
-                       ValidAudience = jwtSettings.Audience,
-                       ValidateAudience = jwtSettings.ValidateAudience,
-                       ValidateLifetime = jwtSettings.ValidateLifeTime,
+               ValidAudience = jwtSettings.Audience,
+               ValidateAudience = jwtSettings.ValidateAudience,
+               ValidateLifetime = jwtSettings.ValidateLifeTime,
            };
        });
+
         builder.Services.AddAuthorization();
 
         // Configure Serilog
@@ -97,8 +95,6 @@ public class Program
         {
             configuration.ReadFrom.Configuration(context.Configuration);
         });
-
-
 
         var app = builder.Build();
 
@@ -110,6 +106,7 @@ public class Program
                    .AllowAnyHeader();
         });
 
+        builder.Services.AddTransient<AuthFilter>();
         //// Seed data
         using (var scope = app.Services.CreateScope())
         {

@@ -73,7 +73,7 @@ public class AuthenticationServices : IAuthenticationServices
         return (jwtToken, accessToken);
     }
 
-      public async Task<List<Claim>> GetClaims(User user)
+    public async Task<List<Claim>> GetClaims(User user)
     {
         var roles = await _userManager.GetRolesAsync(user);
         var claims = new List<Claim>()
@@ -103,6 +103,7 @@ public class AuthenticationServices : IAuthenticationServices
         };
         return refreshToken;
     }
+
     private string GenerateRefreshToken()
     {
         var randomNumber = new byte[32];
@@ -110,7 +111,6 @@ public class AuthenticationServices : IAuthenticationServices
         randomNumberGenerate.GetBytes(randomNumber);
         return Convert.ToBase64String(randomNumber);
     }
-  
 
     public async Task<JwtAuthResult> GetRefreshToken(User user, JwtSecurityToken jwtToken, DateTime? expiryDate, string refreshToken)
     {
