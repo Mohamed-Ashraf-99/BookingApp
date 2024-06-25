@@ -29,10 +29,10 @@ namespace Booking.Api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> InsertHotelToWishList(AddHotelsToWishListCommand addHotelsToWishListCommand)
+        public async Task<IActionResult> InsertHotelToWishList(int clientId, int hotelId)
         {
-            //var query = new AddHotelsToWishListCommand();
-            var wishlist = await _mediator.Send(addHotelsToWishListCommand);
+            var query = new AddHotelsToWishListCommand(clientId,hotelId);
+            var wishlist = await _mediator.Send(query);
 
             if (wishlist != null)
             {

@@ -23,7 +23,7 @@ namespace Booking.Application.ApplicationUser.Mapping
                 .ForMember(dest => dest.Complains, opt => opt.MapFrom(src => src.Complains))
                 .ForMember(dest => dest.Rooms, opt => opt.MapFrom(src => src.Rooms))
                 .ForMember(dest => dest.Restaurants, opt => opt.MapFrom(src => src.Restaurants))
-                .ForMember(dest => dest.WishLists, opt => opt.MapFrom(src => src.WishLists))
+                //.ForMember(dest => dest.WishLists, opt => opt.MapFrom(src => src.WishLists))
                 .ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers))
                 .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
@@ -40,7 +40,7 @@ namespace Booking.Application.ApplicationUser.Mapping
                 .ForMember(dest => dest.Complains, opt => opt.MapFrom(src => src.Complains))
                 .ForMember(dest => dest.Rooms, opt => opt.MapFrom(src => src.Rooms))
                 .ForMember(dest => dest.Restaurants, opt => opt.MapFrom(src => src.Restaurants))
-                .ForMember(dest => dest.WishLists, opt => opt.MapFrom(src => src.WishLists))
+                //.ForMember(dest => dest.WishLists, opt => opt.MapFrom(src => src.WishLists))
                 .ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers))
                 .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));

@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Booking.Application.ApplicationUser.Commands.AddHotelsToWishList
 {
-    public class AddHotelsToWishListCommand : IRequest<string>
+    public class AddHotelsToWishListCommand(int cid, int hid) : IRequest<string>
     {
-        public int clientId { get; set; }
-        public int HotelId { get; set; }    
+        public int clientId { get; set; } = cid;
+        public int HotelId { get; set; } = hid;
     }
 }

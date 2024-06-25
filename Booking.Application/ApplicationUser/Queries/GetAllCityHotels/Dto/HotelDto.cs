@@ -19,7 +19,7 @@ namespace Booking.Application.ApplicationUser.Queries.GetAllCityHotels.Dto
         public List<RestaurantDto> Restaurants { get; set; } = new List<RestaurantDto>();
         public int OwnerId { get; set; }
         public OwnerDto Owner { get; set; }
-        public List<WishListDto> WishLists { get; set; } = new List<WishListDto>();
+        //public List<WishListDto> WishLists { get; set; } = new List<WishListDto>();
         public List<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
 
         public List<OfferDto> Offers { get; set; } = new List<OfferDto>();

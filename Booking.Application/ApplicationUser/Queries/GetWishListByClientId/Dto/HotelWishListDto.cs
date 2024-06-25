@@ -21,7 +21,6 @@ namespace Booking.Application.ApplicationUser.Queries.GetWishListByClientId.Dto
         public int OwnerId { get; set; }
         public OwnerDto Owner { get; set; }
         public List<ReviewDto> Reviews { get; set; } = new List<ReviewDto>();
-
         public List<OfferDto> Offers { get; set; } = new List<OfferDto>();
         public List<RoomDto> Rooms { get; set; } = new List<RoomDto>();
         public List<ComplainDto> Complains { get; set; } = new List<ComplainDto>();

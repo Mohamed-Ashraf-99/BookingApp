@@ -60,6 +60,9 @@ public class BookingDbContext(DbContextOptions options) : IdentityDbContext<User
                 .HasKey(hw => new { hw.HotelsId, hw.WishListsId }); // Composite key
 
         builder.Entity<HotelWishList>()
+.          ToTable("HotelWishList");
+
+        builder.Entity<HotelWishList>()
             .HasOne(hw => hw.Hotel)
             .WithMany(h => h.HotelWishLists)
             .HasForeignKey(hw => hw.HotelsId);
