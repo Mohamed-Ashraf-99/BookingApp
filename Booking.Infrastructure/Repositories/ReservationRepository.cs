@@ -12,4 +12,9 @@ public class ReservationRepository(BookingDbContext _context) : IReservationRepo
         await _context.SaveChangesAsync();
         return reservation.Id;
     }
+
+    public async Task<Reservation> GetByIdAsync(int id)
+    {
+        return await _context.Reservations.FindAsync(id);
+    }
 }
