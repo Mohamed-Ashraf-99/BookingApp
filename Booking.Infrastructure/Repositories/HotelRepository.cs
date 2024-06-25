@@ -14,9 +14,17 @@ namespace Booking.Infrastructure.Repositories
     {
         public async Task<IEnumerable<Hotel>> GetHotelsByCityAsync(string city)
         {
+            if (string.IsNullOrWhiteSpace(city))
+            {
+                return Enumerable.Empty<Hotel>();
+            }
+
+            city = city.ToLower().Trim();
+
             return await _context.Hotels
-                .Include(h => h.Images).Include(h=>h.Reviews)
-                .Where(h => h.Address.City.ToLower() == city.ToLower() && h.IsDeleted!=true)
+                .Include(h => h.Images)
+                .Include(h => h.Reviews)
+                .Where(h => h.Address.City.ToLower().Trim() == city && h.IsDeleted != true)
                 .ToListAsync();
         }
 
