@@ -10,8 +10,8 @@ namespace Booking.Domain.Entities
     {
         public int Id { get; set; }
         public string Discription { get; set; }
-        public bool? IsSolved { get; set; }
-        public bool? IsDeleted { get; set; }
+        public bool? IsSolved { get; set; } = false;
+        public bool? IsDeleted { get; set; } = false;
         public DateTime Date { get; set; }
         public int HotelId { get; set; }
         public virtual Hotel? Hotel { get; set; }
