@@ -101,18 +101,18 @@ public class Program
         // Use CORS
         app.UseCors(options =>
         {
-            options.AllowAnyOrigin()
+            options.WithOrigins("http://localhost:4200")
                    .AllowAnyMethod()
                    .AllowAnyHeader();
         });
 
         //builder.Services.AddTransient<AuthFilter>();
         //// Seed data
-        using (var scope = app.Services.CreateScope())
-        {
-            var seeder = scope.ServiceProvider.GetRequiredService<IBookingSeeder>();
-            await seeder.Seed();
-        }
+        //using (var scope = app.Services.CreateScope())
+        //{
+        //    var seeder = scope.ServiceProvider.GetRequiredService<IBookingSeeder>();
+        //    await seeder.Seed();
+        //}
 
         // Use custom Middleware
         app.UseMiddleware<ErrorHandlingMiddleware>();
