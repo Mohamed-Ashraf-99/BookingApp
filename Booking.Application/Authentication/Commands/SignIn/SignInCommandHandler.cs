@@ -27,6 +27,7 @@ public class SignInCommandHandler(ILogger<SignInCommandHandler> _logger,
             }
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+            
             if (!signInResult.Succeeded)
             {
                 _logger.LogWarning($"Sign in failed for User with Email: {request.Email}");

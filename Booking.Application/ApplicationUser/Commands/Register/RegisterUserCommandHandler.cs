@@ -5,13 +5,17 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Booking.Domain.Entities.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http;
+using Booking.Application.Services.Email;
 
 
 namespace Booking.Application.ApplicationUser.Commands.Register;
 
 public class RegisterUserCommandHandler(ILogger<RegisterUserCommandHandler> _logger,
     IMapper _mapper,
-    UserManager<User> _userManager) : IRequestHandler<RegisterUserCommand, string>
+    UserManager<User> _userManager,
+    IHttpContextAccessor _httpContextAccessor,
+    IEmailService _emailService) : IRequestHandler<RegisterUserCommand, string>
 {
     public async Task<string> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
@@ -43,5 +47,6 @@ public class RegisterUserCommandHandler(ILogger<RegisterUserCommandHandler> _log
 
         _logger.LogInformation($"User {request.UserName} successfully registered.");
         return "Registration succeeded";
+
     }
 }

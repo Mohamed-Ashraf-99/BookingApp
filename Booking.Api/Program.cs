@@ -13,6 +13,7 @@ using Booking.Application.Authentication.Helpers;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using Microsoft.Extensions.Configuration;
+using Booking.Application.Emails.Helpers;
 
 namespace Booking.Api;
 
@@ -37,22 +38,22 @@ public class Program
         // Registering the Identity services with custom User and Role entities
         builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
         {
-            // Password settings (customize as needed)
+            // Password settings 
             options.Password.RequireDigit = true;
             options.Password.RequireLowercase = true;
             options.Password.RequireUppercase = true;
             options.Password.RequireNonAlphanumeric = false;
             options.Password.RequiredLength = 6;
 
-            // Lockout settings (customize as needed)
+            // Lockout settings 
             options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             options.Lockout.MaxFailedAccessAttempts = 5;
             options.Lockout.AllowedForNewUsers = true;
 
-            // User settings (customize as needed)
+            // User settings 
             options.User.RequireUniqueEmail = true;
 
-            // Sign-in settings (customize as needed)
+            // Sign-in settings 
             options.SignIn.RequireConfirmedPhoneNumber = false;
         })
         .AddEntityFrameworkStores<BookingDbContext>()
@@ -60,9 +61,12 @@ public class Program
 
 
         JwtSettings jwtSettings = new JwtSettings();
+        EmailSettings emailSettings = new EmailSettings();
         builder.Configuration.GetSection(nameof(jwtSettings)).Bind(jwtSettings);
+        builder.Configuration.GetSection(nameof(emailSettings)).Bind(emailSettings);
 
         builder.Services.AddSingleton(jwtSettings);
+        builder.Services.AddSingleton(emailSettings);
 
         builder.Services.AddAuthentication(x =>
         {
