@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    [Migration("20240625012224_AddHotelWishListEntity")]
-    partial class AddHotelWishListEntity
+    [Migration("20240625020929_AddHotelsToWishList")]
+    partial class AddHotelsToWishList
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
