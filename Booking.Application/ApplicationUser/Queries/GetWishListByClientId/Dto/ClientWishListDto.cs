@@ -12,7 +12,7 @@ namespace Booking.Application.ApplicationUser.Queries.GetWishListByClientId.Dto
     {
         public int Id { get; set; }
         public bool? IsDeleted { get; set; }
-        public Client Client { get; set; }
+       // public Client Client { get; set; }
         public int? ClientId { get; set; }
         public List<HotelWishListDto> Hotels { get; set; }
 

@@ -29,7 +29,15 @@ namespace Booking.Infrastructure.Repositories
         {
             return await _context.WishList
                 .Include(w => w.HotelWishLists)
-                .ThenInclude(hw => hw.Hotel).Include(hw=>hw.Client)
+                   .ThenInclude(hw => hw.Hotel)
+                   .ThenInclude(hw=>hw.Images)
+                 .Include(w => w.HotelWishLists)
+                   .ThenInclude(hw => hw.Hotel)
+                   .ThenInclude(hw => hw.Reviews)
+                   .Include(w => w.HotelWishLists)
+                   .ThenInclude(hw => hw.Hotel)
+                   .ThenInclude(hw => hw.Owner)
+                 .Include(hw=>hw.Client)
                 .FirstOrDefaultAsync(w => w.ClientId == clientId);
         }
     }
