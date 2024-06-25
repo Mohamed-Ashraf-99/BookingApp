@@ -1,4 +1,5 @@
-﻿using Booking.Application.ApplicationUser.Queries.GetHotelById;
+﻿using Booking.Application.ApplicationUser.Commands.AddHotelsToWishList;
+using Booking.Application.ApplicationUser.Queries.GetHotelById;
 using Booking.Application.ApplicationUser.Queries.GetWishListByClientId;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -23,6 +24,24 @@ namespace Booking.Api.Controllers
             else
             {
                 return NotFound($"No wishlist found for the client with ID {clientId}.");
+            }
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> InsertHotelToWishList(AddHotelsToWishListCommand addHotelsToWishListCommand)
+        {
+            //var query = new AddHotelsToWishListCommand();
+            var wishlist = await _mediator.Send(addHotelsToWishListCommand);
+
+            if (wishlist != null)
+            {
+                return Ok(wishlist);
+            }
+            else
+            {
+                return BadRequest();
+         
             }
         }
     }

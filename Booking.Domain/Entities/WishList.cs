@@ -10,4 +10,6 @@ public class WishList
     public List<Hotel>? Hotels { get; set; }
     public Client? Client { get; set; }
     public int? ClientId { get; set; }
+    public List<HotelWishList> HotelWishLists { get; set; } = new List<HotelWishList>();
+
 }

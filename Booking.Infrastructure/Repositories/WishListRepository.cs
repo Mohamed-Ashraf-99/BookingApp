@@ -12,9 +12,25 @@ namespace Booking.Infrastructure.Repositories
 {
     public class WishListRepository(BookingDbContext _context) : IWishListRepository
     {
+        public async Task AddHotelsToWishList(HotelWishList hotelwishList)
+        {
+            await _context.HotelWishLists.AddAsync(hotelwishList);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<int> AddWishListforClient(WishList wishList)
+        {
+            await _context.WishList.AddAsync(wishList); 
+            await _context.SaveChangesAsync();
+            return wishList.Id; 
+        }
+
         public async Task<WishList> GetWishListByClientIdAsync(int clientId)
         {
-            return await _context.WishList.Include(wl => wl.Hotels).FirstOrDefaultAsync(wl => wl.ClientId == clientId && wl.IsDeleted != true); 
+            return await _context.WishList
+                .Include(w => w.HotelWishLists)
+                .ThenInclude(hw => hw.Hotel)
+                .FirstOrDefaultAsync(w => w.ClientId == clientId);
         }
     }
 }
