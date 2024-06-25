@@ -12,11 +12,17 @@ public class CurrentUserService(IHttpContextAccessor _httpContextAccessor,
 
     public async Task<int> GetUserId()
     {
-        var userId = _httpContextAccessor.HttpContext.User.Claims.FirstOrDefault(claim =>claim.Type == nameof(UserClaimModel.Id)).Value;
-        if (userId is null)
-            throw new NotFoundException(nameof(User), userId);
-        return int.Parse(userId);
+        var userIdClaim = _httpContextAccessor.HttpContext?.User?.Claims.FirstOrDefault(claim => claim.Type == nameof(UserClaimModel.Id));
+
+        if (userIdClaim == null || string.IsNullOrEmpty(userIdClaim.Value))
+            throw new NotFoundException(nameof(User), "User ID claim not found or invalid.");
+
+        if (!int.TryParse(userIdClaim.Value, out int userId))
+              throw new Exception("Can't Parse");
+
+        return userId;
     }
+    
     public async Task<User> GetUserAsync()
     {
         var userId =await GetUserId();

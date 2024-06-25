@@ -60,6 +60,9 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IHotelRepository, HotelRepository>();
         services.AddScoped<IOfferRepository, OfferRepository>();
         services.AddScoped<IReviewsRepository, ReviewsRepository>();
+        services.AddScoped<IReservationRepository, ReservationRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IClientRepository, ClientRepository>();
 
     }
 }

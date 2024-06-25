@@ -11,6 +11,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Booking.Application.Services.Authentication;
+using Booking.Application.Services.CurrentUser;
 namespace SchoolProject.Service.Implementations;
 
 public class AuthenticationServices : IAuthenticationServices
@@ -19,12 +20,14 @@ public class AuthenticationServices : IAuthenticationServices
     private readonly JwtSettings _jwtSettings;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly UserManager<User> _userManager;
-    #endregion 
+    private readonly ICurrentUserService _currentUserService;
+    #endregion
 
     #region Constructors
     public AuthenticationServices(JwtSettings jwtSettings,
                                  IRefreshTokenRepository refreshTokenRepository,
-                                 UserManager<User> userManager
+                                 UserManager<User> userManager,
+                                 ICurrentUserService currentUserService
                           )
     {
         _jwtSettings = jwtSettings;
@@ -40,7 +43,8 @@ public class AuthenticationServices : IAuthenticationServices
     public async Task<JwtAuthResult> GetJWTToken(User user)
     {
         var (jwtToken, accessToken) = await GenerateJWTToken(user);
-        var refreshToken = GetRefreshToken(user.UserName);
+        var userRoles = await GetUserRoles(user);
+        var refreshToken = await GetRefreshToken(user.UserName, user.Id, userRoles);
         var userRefreshToken = new UserRefreshToken
         {
             CreationDate = DateTime.Now,
@@ -48,7 +52,7 @@ public class AuthenticationServices : IAuthenticationServices
             IsUsed = true,
             IsRevoked = false,
             JwtId = jwtToken.Id,
-            RefreshToken = refreshToken.Token,
+            RefreshToken =  refreshToken.Token,
             Token = accessToken,
             UserId = user.Id
         };
@@ -58,6 +62,12 @@ public class AuthenticationServices : IAuthenticationServices
         response.RefreshToken = refreshToken;
         response.AccessToken = accessToken;
         return response;
+    }
+
+    private async Task<List<string>> GetUserRoles(User user)
+    {
+        var roles = await _userManager.GetRolesAsync(user);
+        return roles.ToList();
     }
 
     private async Task<(JwtSecurityToken, string)> GenerateJWTToken(User user)
@@ -93,13 +103,16 @@ public class AuthenticationServices : IAuthenticationServices
         return claims;
     }
 
-    private RefreshToken GetRefreshToken(string username)
+    private async Task<RefreshToken> GetRefreshToken(string username, int userId, List<string> userRoles)
     {
+
         var refreshToken = new RefreshToken
         {
             ExpireDate = DateTime.Now.AddDays(_jwtSettings.RefreshTokenExpireDate),
             UserName = username,
-            Token = GenerateRefreshToken()
+            Token = GenerateRefreshToken(),
+            UserId = userId,
+            UserRoles = userRoles
         };
         return refreshToken;
     }

@@ -106,7 +106,7 @@ public class Program
                    .AllowAnyHeader();
         });
 
-        builder.Services.AddTransient<AuthFilter>();
+        //builder.Services.AddTransient<AuthFilter>();
         //// Seed data
         using (var scope = app.Services.CreateScope())
         {

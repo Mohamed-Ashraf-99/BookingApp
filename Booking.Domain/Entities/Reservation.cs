@@ -14,5 +14,5 @@ public class Reservation
     public string? PaymentIntentId  { get; set; }
     public decimal? Amount { get; set; }
     public ReservationState? State {  get; set; }
-    public virtual List<Room>? Rooms { get; set; }
+    public virtual List<Room>? Rooms { get; set; } = new List<Room>();
 }

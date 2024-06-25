@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Authentication.Helpers;
 using Booking.Application.Services.Authentication;
+using Booking.Application.Services.CurrentUser;
 using Booking.Domain.Entities.Identity;
 using Booking.Domain.Exceptions;
 using MediatR;
@@ -11,8 +12,10 @@ namespace Booking.Application.Authentication.Commands.SignIn;
 public class SignInCommandHandler(ILogger<SignInCommandHandler> _logger,
     UserManager<User> _userManager,
     SignInManager<User> _signInManager,
-    IAuthenticationServices _authenticationService) : IRequestHandler<SignInCommand, JwtAuthResult>
+    IAuthenticationServices _authenticationService,
+    ICurrentUserService _currentUserService) : IRequestHandler<SignInCommand, JwtAuthResult>
 {
+
     public async Task<JwtAuthResult> Handle(SignInCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"Sign in attempt for User with Email: {request.Email}");
@@ -27,7 +30,7 @@ public class SignInCommandHandler(ILogger<SignInCommandHandler> _logger,
             }
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
-            
+
             if (!signInResult.Succeeded)
             {
                 _logger.LogWarning($"Sign in failed for User with Email: {request.Email}");
@@ -43,4 +46,5 @@ public class SignInCommandHandler(ILogger<SignInCommandHandler> _logger,
             throw new Exception(ex.Message);
         }
     }
+
 }

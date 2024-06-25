@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Services.Authentication;
 using Booking.Application.Services.Authorization;
+using Booking.Application.Services.CurrentUser;
 using Booking.Application.Services.Email;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -25,6 +26,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IAuthenticationServices, AuthenticationServices>();
         services.AddScoped<IAuthorizationServices, AuthorizationServices>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<ICurrentUserService, CurrentUserService>();
 
     }
 }
