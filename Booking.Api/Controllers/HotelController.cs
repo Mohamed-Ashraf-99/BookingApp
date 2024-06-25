@@ -16,10 +16,14 @@ namespace Booking.Api.Controllers
     [ApiController]
     public class HotelController (IMediator _mediator) : ControllerBase
     {
-        [HttpGet("{City:alpha}")]
+        [HttpGet("{City}")]
         public async Task<IActionResult> GetHotelByCity(string City)
         {
-            
+            if (string.IsNullOrWhiteSpace(City))
+            {
+                return BadRequest("City parameter is required.");
+            }
+
             var query = new GetCityHotelsListQuery(City); 
             var hotels = await _mediator.Send(query);
 
