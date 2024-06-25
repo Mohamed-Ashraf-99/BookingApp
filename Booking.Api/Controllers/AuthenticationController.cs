@@ -1,4 +1,5 @@
-﻿using Booking.Application.Authentication.Commands.RefreshToken;
+﻿using Booking.Application.Authentication.Commands.Logout;
+using Booking.Application.Authentication.Commands.RefreshToken;
 using Booking.Application.Authentication.Commands.SignIn;
 using Booking.Application.Authentication.Queries.AuthorizeUser;
 using Booking.Application.Authentication.Queries.ConfirmEmail;
@@ -43,6 +44,13 @@ namespace Booking.Api.Controllers
             return Ok(response);
         }
 
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout([FromBody] LogoutCommand command)
+        {
+            var result = await _mediator.Send(command);
+            return Ok(result);
+        }
+
         //    [HttpGet("ConfirmEmail")]
         //    public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailQuery confirmEmailQuery)
         //    {
@@ -50,5 +58,6 @@ namespace Booking.Api.Controllers
         //        return Ok(response);
         //    }
         //}
+
     }
 }
