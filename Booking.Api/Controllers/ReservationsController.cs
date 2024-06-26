@@ -5,6 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Checkout;
+using Stripe.Tax;
 
 namespace Booking.Api.Controllers
 {
@@ -34,6 +36,20 @@ namespace Booking.Api.Controllers
             {
                 _logger.LogError(ex, "Error creating reservation.");
                 return StatusCode(500, new { Message = "An error occurred while creating reservation." });
+            }
+        }
+
+        [HttpPost("create-checkout-session")]
+        public async Task<IActionResult> CreateCheckoutSession([FromBody] CreateCheckoutSessionCommand command)
+        {
+            try
+            {
+                var response = await _mediator.Send(command);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { error = ex.Message });
             }
         }
 
