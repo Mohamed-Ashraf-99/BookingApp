@@ -21,11 +21,10 @@ public class CreateReservationCommandValidator : AbstractValidator<CreateReserva
         RuleFor(x => x.ClientId)
             .GreaterThan(0).WithMessage("Client ID is required.");
 
-        RuleFor(x => x.RoomIds)
+        RuleFor(x => x.RoomId)
             .NotEmpty().WithMessage("At least one room must be selected.");
 
-        RuleForEach(x => x.RoomIds)
-            .GreaterThan(0).WithMessage("Room IDs must be greater than 0.");
+       
     }
     private bool BeAValidDate(DateTime date)
     {

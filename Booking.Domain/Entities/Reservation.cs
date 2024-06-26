@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Entities.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Booking.Domain.Entities;
 
@@ -14,5 +15,7 @@ public class Reservation
     public string? PaymentIntentId  { get; set; }
     public decimal? Amount { get; set; }
     public ReservationState? State {  get; set; }
-    public virtual List<Room>? Rooms { get; set; } = new List<Room>();
+    public int? RoomId { get; set; }
+    [ForeignKey("RoomId")]
+    public virtual Room? Rooms { get; set; }
 }

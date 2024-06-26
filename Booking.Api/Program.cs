@@ -20,10 +20,21 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+
+
         // Add services to the container.
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
 
+        // Add CORS policy
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowAllOrigins",
+                builder => builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader());
+        });
         // Register custom middleware
         builder.Services.AddScoped<ErrorHandlingMiddleware>();
         builder.Services.AddScoped<RequestTimeLoggingMiddleware>();
@@ -99,12 +110,6 @@ public class Program
         var app = builder.Build();
 
         // Use CORS
-        app.UseCors(options =>
-        {
-            options.WithOrigins("http://localhost:4200")
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        });
 
         //builder.Services.AddTransient<AuthFilter>();
         //// Seed data
@@ -128,7 +133,8 @@ public class Program
         app.UseHttpsRedirection();
 
         app.UseRouting();
-
+        
+        app.UseCors("AllowAllOrigins");
         app.UseAuthentication();
 
         app.UseAuthorization();

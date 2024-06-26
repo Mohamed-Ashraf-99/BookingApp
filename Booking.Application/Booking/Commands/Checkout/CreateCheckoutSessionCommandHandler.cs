@@ -48,7 +48,7 @@ namespace Booking.Application.Booking.Commands.Checkout
                 return new CreateCheckoutSessionResponse
                 {
                     SessionId = session.Id,
-                    PublicKey = _configuration["StripeSettings:PublishableKey"];
+                    PublicKey = _configuration["StripeSettings:PublishableKey"]
                 };
             }
             catch (StripeException ex)
@@ -58,5 +58,5 @@ namespace Booking.Application.Booking.Commands.Checkout
             }
         }
     }
-
 }
+        

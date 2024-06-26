@@ -246,8 +246,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Reservation>
             {
-                new Reservation { StartDate = DateTime.Now.AddDays(5), EndDate = DateTime.Now.AddDays(10), NumberOfGuests = 1, IsDeleted = false, ClientId = 1, Amount = 500, State = ReservationState.Confirmed, Rooms = new List<Room> { _context.Rooms.Find(1) } },
-                new Reservation { StartDate = DateTime.Now.AddDays(15), EndDate = DateTime.Now.AddDays(20), NumberOfGuests = 2, IsDeleted = false, ClientId = 2, Amount = 1600, State = ReservationState.Pending, Rooms = new List<Room> { _context.Rooms.Find(2) } }
+                new Reservation { StartDate = DateTime.Now.AddDays(5), EndDate = DateTime.Now.AddDays(10), NumberOfGuests = 1, IsDeleted = false, ClientId = 1, Amount = 500, State = ReservationState.Confirmed, Rooms =  _context.Rooms.Find(1) },
+                new Reservation { StartDate = DateTime.Now.AddDays(15), EndDate = DateTime.Now.AddDays(20), NumberOfGuests = 2, IsDeleted = false, ClientId = 2, Amount = 1600, State = ReservationState.Pending, Rooms = _context.Rooms.Find(2)  }
             };
         }
 

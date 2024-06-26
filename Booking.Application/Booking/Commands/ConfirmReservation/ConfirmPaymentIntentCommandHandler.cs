@@ -17,8 +17,9 @@ namespace Booking.Application.Booking.Commands.ConfirmPaymentIntent
         {
             try
             {
-                bool result = await _paymentIntentService.ConfirmPaymentIntent(request.PaymentIntentId, request.PaymentMethodId);
-                return result;
+                //bool result = await _paymentIntentService.ConfirmPaymentIntent(request.PaymentIntentId, request.PaymentMethodId);
+                //return result;
+                return true;
             }
             catch (StripeException ex)
             {

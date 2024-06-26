@@ -28,7 +28,8 @@ public class RefundPaymentCommandHandler(ILogger<RefundPaymentCommandHandler> _l
                 return false;
             }
 
-            return await _paymentService.RefundPayment(paymentIntentId, request.AmountToRefund);
+            //return await _paymentService.RefundPayment(paymentIntentId, request.AmountToRefund);
+            return true;
         }
         catch (Exception ex)
         {
