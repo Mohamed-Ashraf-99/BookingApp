@@ -23,7 +23,12 @@ namespace Booking.Api.Controllers
             {
                 var result = await _mediator.Send(command);
 
-                if (result == "Succeeded")
+                if (result.StartsWith("http"))
+                {
+                    // Redirect to Stripe checkout
+                    return Redirect(result);
+                }
+                else if (result == "Succeeded")
                 {
                     return Ok(new { Message = "Reservation created successfully." });
                 }
