@@ -1,9 +1,13 @@
 ﻿using Booking.Application.Authentication.Helpers;
+using Booking.Application.Emails.Helpers;
+using Booking.Domain.Entities.Identity;
 using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
 using Booking.Infrastructure.Repositories;
 using Booking.Infrastructure.Seeders;
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,11 +26,74 @@ public static class ServiceCollectionExtensions
             options.UseSqlServer(connectionString)
                    .EnableSensitiveDataLogging());
 
-        
+        //Add Hangfire Configuration
+        services.AddHangfire(x => x.UseSqlServerStorage(connectionString));
+        services.AddHangfireServer();
+
+        #region JWT Configuration
+        // Registering the Identity services with custom User and Role entities
+        services.AddIdentity<User, IdentityRole<int>>(options =>
+        {
+            // Password settings 
+            options.Password.RequireDigit = true;
+            options.Password.RequireLowercase = true;
+            options.Password.RequireUppercase = true;
+            options.Password.RequireNonAlphanumeric = false;
+            options.Password.RequiredLength = 6;
+
+            // Lockout settings 
+            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            options.Lockout.MaxFailedAccessAttempts = 5;
+            options.Lockout.AllowedForNewUsers = true;
+
+            // User settings 
+            options.User.RequireUniqueEmail = true;
+
+            // Sign-in settings 
+            options.SignIn.RequireConfirmedEmail = false;
+        })
+        .AddEntityFrameworkStores<BookingDbContext>()
+        .AddDefaultTokenProviders();
+
+
+        JwtSettings jwtSettings = new JwtSettings();
+        EmailSettings emailSettings = new EmailSettings();
+        configuration.GetSection(nameof(jwtSettings)).Bind(jwtSettings);
+        configuration.GetSection(nameof(emailSettings)).Bind(emailSettings);
+
+        services.AddSingleton(jwtSettings);
+        services.AddSingleton(emailSettings);
+
+        services.AddAuthentication(x =>
+        {
+            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+       .AddJwtBearer(x =>
+       {
+           x.SaveToken = true;
+           x.RequireHttpsMetadata = false;
+           x.TokenValidationParameters = new TokenValidationParameters
+           {
+               ValidateIssuer = jwtSettings.ValidateIssuer,
+               ValidIssuers = new[] { jwtSettings.Issuer },
+               ValidateIssuerSigningKey = jwtSettings.ValidateIssuerSigningKey,
+               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
+                       .GetBytes(jwtSettings.Secret)),
+               ValidAudience = jwtSettings.Audience,
+               ValidateAudience = jwtSettings.ValidateAudience,
+               ValidateLifetime = jwtSettings.ValidateLifeTime,
+           };
+       });
+
+        services.AddAuthorization();
+        #endregion
+
         // Swagger Configuration
         services.AddSwaggerGen(c =>
         {
-            c.SwaggerDoc("v1", new OpenApiInfo { Title = "School Project", Version = "v1" });
+            c.SwaggerDoc("v1", new OpenApiInfo { Title = "Booking Project", Version = "v1" });
             c.EnableAnnotations();
 
             c.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme

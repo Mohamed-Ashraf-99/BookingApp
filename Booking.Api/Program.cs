@@ -1,149 +1,78 @@
-using Booking.Infrastructure.Persistence;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Hangfire;
+using Booking.Infrastructure.Scheduling;
 using Booking.Api.Middlewares;
 using Booking.Application.Extensions;
-using Booking.Domain.Entities.Identity;
-using Microsoft.AspNetCore.Identity;
 using Serilog;
-using Booking.Infrastructure.Seeders;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Booking.Application.Authentication.Helpers;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using Booking.Application.Emails.Helpers;
-using Booking.Application.Filters;
 
-namespace Booking.Api;
+var builder = WebApplication.CreateBuilder(args);
 
-public class Program
+// Add services to the container.
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+
+// Add CORS policy
+builder.Services.AddCors(options =>
 {
-    public static async Task Main(string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
+    options.AddPolicy("AllowAllOrigins",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
 
+// Register custom middleware
+builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<RequestTimeLoggingMiddleware>();
 
+// Register application and infrastructure services
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(builder.Configuration);
 
-        // Add services to the container.
-        builder.Services.AddControllers();
-        builder.Services.AddEndpointsApiExplorer();
+// Register the scheduler
+builder.Services.AddScoped<JobsScheduler>();
 
-        // Add CORS policy
-        builder.Services.AddCors(options =>
-        {
-            options.AddPolicy("AllowAllOrigins",
-                builder => builder
-                    .AllowAnyOrigin()
-                    .AllowAnyMethod()
-                    .AllowAnyHeader());
-        });
-        // Register custom middleware
-        builder.Services.AddScoped<ErrorHandlingMiddleware>();
-        builder.Services.AddScoped<RequestTimeLoggingMiddleware>();
+// Configure Serilog
+builder.Host.UseSerilog((context, configuration) =>
+{
+    configuration.ReadFrom.Configuration(context.Configuration);
+});
 
-        // Register application and infrastructure services
-        builder.Services.AddApplication();
-        builder.Services.AddInfrastructure(builder.Configuration);
+var app = builder.Build();
 
-        // Registering the Identity services with custom User and Role entities
-        builder.Services.AddIdentity<User, IdentityRole<int>>(options =>
-        {
-            // Password settings 
-            options.Password.RequireDigit = true;
-            options.Password.RequireLowercase = true;
-            options.Password.RequireUppercase = true;
-            options.Password.RequireNonAlphanumeric = false;
-            options.Password.RequiredLength = 6;
+// Use CORS
+app.UseCors("AllowAllOrigins");
 
-            // Lockout settings 
-            options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            options.Lockout.MaxFailedAccessAttempts = 5;
-            options.Lockout.AllowedForNewUsers = true;
+// Use custom Middleware
+app.UseMiddleware<ErrorHandlingMiddleware>();
+app.UseMiddleware<RequestTimeLoggingMiddleware>();
 
-            // User settings 
-            options.User.RequireUniqueEmail = true;
-
-            // Sign-in settings 
-            options.SignIn.RequireConfirmedEmail = false;
-        })
-        .AddEntityFrameworkStores<BookingDbContext>()
-        .AddDefaultTokenProviders();
-
-
-        JwtSettings jwtSettings = new JwtSettings();
-        EmailSettings emailSettings = new EmailSettings();
-        builder.Configuration.GetSection(nameof(jwtSettings)).Bind(jwtSettings);
-        builder.Configuration.GetSection(nameof(emailSettings)).Bind(emailSettings);
-
-        builder.Services.AddSingleton(jwtSettings);
-        builder.Services.AddSingleton(emailSettings);
-
-        builder.Services.AddAuthentication(x =>
-        {
-            x.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-            x.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            x.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-        })
-       .AddJwtBearer(x =>
-       {
-           x.SaveToken = true;
-           x.RequireHttpsMetadata = false;
-           x.TokenValidationParameters = new TokenValidationParameters
-           {
-               ValidateIssuer = jwtSettings.ValidateIssuer,
-               ValidIssuers = new[] { jwtSettings.Issuer },
-               ValidateIssuerSigningKey = jwtSettings.ValidateIssuerSigningKey,
-               IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8
-                       .GetBytes(jwtSettings.Secret)),
-               ValidAudience = jwtSettings.Audience,
-               ValidateAudience = jwtSettings.ValidateAudience,
-               ValidateLifetime = jwtSettings.ValidateLifeTime,
-           };
-       });
-
-        builder.Services.AddAuthorization();
-
-        // Configure Serilog
-        builder.Host.UseSerilog((context, configuration) =>
-        {
-            configuration.ReadFrom.Configuration(context.Configuration);
-        });
-
-        var app = builder.Build();
-
-        // Use CORS
-
-        //builder.Services.AddTransient<AuthFilter>();
-        //// Seed data
-        //using (var scope = app.Services.CreateScope())
-        //{
-        //    var seeder = scope.ServiceProvider.GetRequiredService<IBookingSeeder>();
-        //    await seeder.Seed();
-        //}
-
-        // Use custom Middleware
-        app.UseMiddleware<ErrorHandlingMiddleware>();
-        app.UseMiddleware<RequestTimeLoggingMiddleware>();
-
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.UseSwagger();
-            app.UseSwaggerUI();
-        }
-
-        app.UseHttpsRedirection();
-
-        app.UseRouting();
-        
-        app.UseCors("AllowAllOrigins");
-        app.UseAuthentication();
-
-        app.UseAuthorization();
-
-        app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-        });
-
-        app.Run();
-    }
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
 }
+
+app.UseHttpsRedirection();
+app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseHangfireDashboard("/hangfireDashboard");
+
+// Configure Hangfire recurring job scheduling within a method
+using (var scope = app.Services.CreateScope())
+{
+    var scheduler = scope.ServiceProvider.GetRequiredService<JobsScheduler>();
+    scheduler.ScheduleRecurringJobs();
+}
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
+
+app.Run();

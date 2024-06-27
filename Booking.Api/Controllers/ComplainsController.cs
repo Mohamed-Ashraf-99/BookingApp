@@ -2,6 +2,7 @@
 using Booking.Application.UserComplains.Queries.GetHotelComplains;
 using Booking.Application.UserComplains.Queries.GetUsersComplains;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,6 +10,7 @@ namespace Booking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "User")]
     public class ComplainsController(IMediator _mediator) : ControllerBase
     {
         [HttpPost("create")]

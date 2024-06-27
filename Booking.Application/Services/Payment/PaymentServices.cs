@@ -64,13 +64,56 @@ public class PaymentServices(IConfiguration _configuration, ILogger<PaymentServi
 
     public async Task<string> Success(CreateReservationCommand? command)
     {
-        var user = await _currentUserService.GetUserAsync();
-        var cleintId = await _clientRepository.GetClientIdByUserId(user.Id);
-        command.ClientId = cleintId;
-        var reservation = _mapper.Map<Reservation>(command);
-        var result = await _reservationRepository.CreateAsync(reservation);
-        if (result > 0)
-            return "Succeeded";
-        return "Failed";
+        if (command is null)
+        {
+            _logger.LogError("CreateReservationCommand is null");
+            return "Failed";
+        }
+
+        try
+        {
+            _logger.LogInformation("Starting reservation creation process");
+
+            var user = await _currentUserService.GetUserAsync();
+            if (user == null)
+            {
+                _logger.LogError("User could not be retrieved");
+                return "Failed";
+            }
+
+            var clientId = await _clientRepository.GetClientIdByUserId(user.Id);
+            if (clientId == null)
+            {
+                _logger.LogError($"Client ID could not be retrieved for user ID {user.Id}");
+                return "Failed";
+            }
+
+            command.ClientId = clientId;
+            _logger.LogInformation($"Mapped ClientId {clientId} to command");
+
+            var reservation = _mapper.Map<Reservation>(command);
+            if (reservation is null)
+            {
+                _logger.LogError("Mapping CreateReservationCommand to Reservation failed");
+                return "Failed";
+            }
+
+            var result = await _reservationRepository.CreateAsync(reservation);
+            if (result > 0)
+            {
+                _logger.LogInformation($"Reservation created successfully for ClientId {clientId}");
+                return "Succeeded";
+            }
+            else
+            {
+                _logger.LogWarning($"Reservation creation failed for ClientId {clientId}");
+                return "Failed";
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "An error occurred while creating the reservation");
+            return "Failed";
+        }
     }
 }

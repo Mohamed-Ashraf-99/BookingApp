@@ -16,8 +16,7 @@ namespace Booking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "User")]
-    //[EnableCors("AllowAllOrigins")]
+    [Authorize(Roles = "User")]
     public class ReservationsController(IMediator _mediator,
         ILogger<ReservationsController> _logger,
         IPaymentServices _paymentServices) : ControllerBase

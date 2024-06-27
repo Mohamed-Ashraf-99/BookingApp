@@ -8,14 +8,13 @@ using Booking.Application.Authorization.Commands.DeleteRole;
 using Booking.Application.Authorization.Queries.GetAllRoles;
 using Booking.Application.Authorization.Queries.GitRoleById;
 using Booking.Application.Authorization.Queries.ManageUserRoles;
-using Booking.Application.ApplicationUser.Commands.UpdateUser;
 using Booking.Application.Authorization.Commands.UpdateUserRoles;
 
 namespace YourNamespace.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-//[Authorize(Roles = "Admin")]
+[Authorize(Roles = "Admin")]
 public class AuthorizationController : ControllerBase
 {
     private readonly IMediator _mediator;
