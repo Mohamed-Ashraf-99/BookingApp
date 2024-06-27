@@ -237,8 +237,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<Complains>
             {
-                new Complains { Discription = "Room not clean", IsSolved = false, Date = DateTime.Now, HotelId = 1, AdminId = 1, ClientId = 1 },
-                new Complains { Discription = "No hot water", IsSolved = true, Date = DateTime.Now, HotelId = 2, AdminId = 1, ClientId = 2 }
+                new Complains { Discription = "Room not clean", IsSolved = false, Date = DateTime.Now, HotelId = 1, OwnerId = 1, ClientId = 1 },
+                new Complains { Discription = "No hot water", IsSolved = true, Date = DateTime.Now, HotelId = 2, OwnerId = 1, ClientId = 2 }
             };
         }
 

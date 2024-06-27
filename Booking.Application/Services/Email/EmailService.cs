@@ -12,7 +12,6 @@ public class EmailService(EmailSettings _emailSettings) : IEmailService
 
         try
         {
-            //sending the Message of passwordResetLink
             using (var client = new SmtpClient())
             {
                 await client.ConnectAsync(_emailSettings.Host, _emailSettings.Port, true);
@@ -32,7 +31,6 @@ public class EmailService(EmailSettings _emailSettings) : IEmailService
                 await client.SendAsync(mimeMessage);
                 await client.DisconnectAsync(true);
             }
-            //end of sending email
             return "Success";
         }
         catch (Exception ex)

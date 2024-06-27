@@ -46,14 +46,23 @@ public class BookingDbContext(DbContextOptions options) : IdentityDbContext<User
             .HasOne(o => o.Owner)
             .WithMany(owner => owner.Offers)
             .HasForeignKey(o => o.OwnerId)
-            .OnDelete(DeleteBehavior.Restrict); // Disable cascade delete
+            .OnDelete(DeleteBehavior.Restrict);
 
         // Configure the Offer-Hotel relationship
         builder.Entity<Offer>()
             .HasOne(o => o.Hotel)
             .WithMany(h => h.Offers)
             .HasForeignKey(o => o.HotelId)
-            .OnDelete(DeleteBehavior.Restrict); // Disable cascade delete
+            .OnDelete(DeleteBehavior.Restrict);
+
+
+        // Configure the Owner-Complains relationship with SetNull
+        builder.Entity<Complains>()
+    .HasOne(c => c.Owner)
+    .WithMany(o => o.Complains)
+    .HasForeignKey(c => c.OwnerId)
+    .OnDelete(DeleteBehavior.Restrict);
+
 
         base.OnModelCreating(builder);
     }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,8 +16,9 @@ namespace Booking.Domain.Entities
         public DateTime Date { get; set; }
         public int HotelId { get; set; }
         public virtual Hotel? Hotel { get; set; }
-        public virtual Admin? Admin { get; set; }
-        public int AdminId { get; set; }
+        [ForeignKey("OwnerId")]
+        public virtual Owner? Owner { get; set; }
+        public int? OwnerId { get; set; }
         public virtual Client? Client { get; set; }
         public int ClientId { get; set; }
 
