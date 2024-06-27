@@ -25,20 +25,36 @@ namespace Booking.Infrastructure.Repositories
             return wishList.Id; 
         }
 
+        public async Task DeleteUserWishList(HotelWishList hotelWishList)
+        {
+             _context.HotelWishLists.Remove(hotelWishList);
+            await _context.SaveChangesAsync();
+        }
+        public async Task DeleteWishListAsync(WishList wishList)
+        {
+            wishList.IsDeleted = true;
+            UpdateWishListStatusAsync(wishList);
+        }
         public async Task<WishList> GetWishListByClientIdAsync(int clientId)
         {
             return await _context.WishList
                 .Include(w => w.HotelWishLists)
                    .ThenInclude(hw => hw.Hotel)
                    .ThenInclude(hw=>hw.Images)
-                 .Include(w => w.HotelWishLists)
+                .Include(w => w.HotelWishLists)
                    .ThenInclude(hw => hw.Hotel)
                    .ThenInclude(hw => hw.Reviews)
-                   .Include(w => w.HotelWishLists)
+                .Include(w => w.HotelWishLists)
                    .ThenInclude(hw => hw.Hotel)
                    .ThenInclude(hw => hw.Owner)
-                 .Include(hw=>hw.Client)
+                .Include(hw=>hw.Client)
                 .FirstOrDefaultAsync(w => w.ClientId == clientId && w.IsDeleted!=true);
+        }
+
+        public async Task UpdateWishListStatusAsync(WishList wishList)
+        {
+            _context.WishList.Update(wishList);
+            await _context.SaveChangesAsync();
         }
     }
 }

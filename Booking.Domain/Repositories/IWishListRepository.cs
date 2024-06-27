@@ -15,6 +15,10 @@ namespace Booking.Domain.Repositories
 
         Task AddHotelsToWishList(HotelWishList hotelwishList);
 
-      
+        Task DeleteUserWishList(HotelWishList hotelWishList);
+
+        Task DeleteWishListAsync(WishList wishList);
+
+        Task UpdateWishListStatusAsync(WishList wishList);
     }
 }
