@@ -6,6 +6,7 @@ using Booking.Infrastructure.Persistence;
 using Booking.Infrastructure.Repositories;
 using Booking.Infrastructure.Seeders;
 using Hangfire;
+using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -26,8 +27,15 @@ public static class ServiceCollectionExtensions
             options.UseSqlServer(connectionString)
                    .EnableSensitiveDataLogging());
 
-        //Add Hangfire Configuration
-        services.AddHangfire(x => x.UseSqlServerStorage(connectionString));
+        // Add Hangfire Configurations
+        services.AddHangfire(config =>
+            config.UseSqlServerStorage(connectionString, new SqlServerStorageOptions
+            {
+                CommandBatchMaxTimeout = TimeSpan.FromMinutes(5),
+                SlidingInvisibilityTimeout = TimeSpan.FromMinutes(5),
+                UseRecommendedIsolationLevel = true,
+                QueuePollInterval = TimeSpan.FromMinutes(5) // Check the queue every 5 minutes
+            }));
         services.AddHangfireServer();
 
         #region JWT Configuration

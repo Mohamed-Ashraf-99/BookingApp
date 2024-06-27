@@ -1,4 +1,5 @@
 ﻿using Booking.Domain.Repositories;
+using Booking.Infrastructure.Repositories;
 using Hangfire;
 
 
@@ -7,19 +8,19 @@ namespace Booking.Infrastructure.Scheduling;
 public class JobsScheduler
 {
     private readonly IRecurringJobManager _recurringJobManager;
-    private readonly IReservationRepository reservationRepository;
+    private readonly IReservationRepository _reservationRepository;
 
     public JobsScheduler(IRecurringJobManager recurringJobManager, IReservationRepository reservationService)
     {
         _recurringJobManager = recurringJobManager;
-        reservationRepository = reservationService;
+        _reservationRepository = reservationService;
     }
 
     public void ScheduleRecurringJobs()
     {
         _recurringJobManager.AddOrUpdate(
-            "DeleteExpiredReservations",
-            () => reservationRepository.DeleteExpiredReservationsAsync(),
-            "0 0 * * *");
+        "DeleteExpiredReservations",
+                () => _reservationRepository.DeleteExpiredReservationsAsync(),
+                "*/5 * * * *"); // Every 5 minutes
     }
 }
