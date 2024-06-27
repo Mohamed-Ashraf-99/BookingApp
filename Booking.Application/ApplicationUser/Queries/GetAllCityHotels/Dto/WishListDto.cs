@@ -11,7 +11,7 @@ namespace Booking.Application.ApplicationUser.Queries.GetAllCityHotels.Dto
     {
         public int Id { get; set; }
         public bool? IsDeleted { get; set; }
-        public Client Client { get; set; }
+       // public Client Client { get; set; }
         public int? ClientId { get; set; }
     }
 }

@@ -22,5 +22,11 @@ namespace Booking.Infrastructure.Repositories
             return await _context.Reviews.AverageAsync(r => r.Rate);
            
         }
+
+        public async Task InsertReview(Reviews review)
+        {
+            await _context.Reviews.AddAsync(review);
+            await _context.SaveChangesAsync();
+        }
     }
 }

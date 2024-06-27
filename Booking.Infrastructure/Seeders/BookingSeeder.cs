@@ -264,8 +264,8 @@ namespace Booking.Infrastructure.Seeders
         {
             return new List<WishList>
             {
-                new WishList {  ClientId = 1, Hotels = new List<Hotel> { _context.Hotels.Find(1) }} ,
-                new WishList {  ClientId = 2, Hotels = new List<Hotel> { _context.Hotels.Find(2) }}
+                new WishList {  ClientId = 1 /*Hotels = new List<Hotel> { _context.Hotels.Find(1) }*/} ,
+                new WishList {  ClientId = 2 /*Hotels = new List<Hotel> { _context.Hotels.Find(2) }*/}
             };
         }
 

@@ -14,12 +14,12 @@ namespace Booking.Infrastructure.Repositories
     {
         public async Task<IEnumerable<Offer>> GetAllOffersAsync()
         {
-            return await _context.Offers.Include(off => off.Hotel).Where(off => off.IsDeleted != true).ToListAsync();
+            return await _context.Offers.Include(off => off.Hotel).ThenInclude(off=>off.Images).Where(off => off.IsDeleted != true).ToListAsync();
         }
 
         public async Task<IEnumerable<Offer>> GetOffersByHotelIdAsync(int Id)
         {
-            return await _context.Offers.Include(o => o.Hotel).Where(o => o.HotelId == Id && o.IsDeleted != true).ToListAsync();
+            return await _context.Offers.Include(o => o.Hotel).ThenInclude(off => off.Images).Where(o => o.HotelId == Id && o.IsDeleted != true).ToListAsync();
 
         }
     }

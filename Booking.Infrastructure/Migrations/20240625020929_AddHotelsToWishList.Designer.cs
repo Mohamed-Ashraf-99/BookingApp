@@ -4,6 +4,7 @@ using Booking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Booking.Infrastructure.Migrations
 {
     [DbContext(typeof(BookingDbContext))]
-    partial class BookingDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240625020929_AddHotelsToWishList")]
+    partial class AddHotelsToWishList
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +40,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Admins", (string)null);
+                    b.ToTable("Admins");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Client", b =>
@@ -55,7 +58,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Clients", (string)null);
+                    b.ToTable("Clients");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Complains", b =>
@@ -65,6 +68,9 @@ namespace Booking.Infrastructure.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AdminId")
+                        .HasColumnType("int");
 
                     b.Property<int>("ClientId")
                         .HasColumnType("int");
@@ -85,17 +91,13 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<bool?>("IsSolved")
                         .HasColumnType("bit");
 
-                    b.Property<int?>("OwnerId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("AdminId");
 
                     b.HasIndex("ClientId");
 
                     b.HasIndex("HotelId");
-
-                    b.ToTable("Complains", (string)null);
-                    b.HasIndex("OwnerId");
 
                     b.ToTable("Complains");
                 });
@@ -129,7 +131,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Hotels", (string)null);
+                    b.ToTable("Hotels");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.HotelWishList", b =>
@@ -144,7 +146,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("WishListsId");
 
-                    b.ToTable("HotelWishLists", (string)null);
+                    b.ToTable("HotelWishLists");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Identity.User", b =>
@@ -237,7 +239,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("HotelID");
 
-                    b.ToTable("images", (string)null);
+                    b.ToTable("images");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Meals", b =>
@@ -257,7 +259,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Meals", (string)null);
+                    b.ToTable("Meals");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Offer", b =>
@@ -296,7 +298,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Offers", (string)null);
+                    b.ToTable("Offers");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Owner", b =>
@@ -320,7 +322,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Owner", (string)null);
+                    b.ToTable("Owner");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Package", b =>
@@ -341,7 +343,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("RoomId");
 
-                    b.ToTable("Packages", (string)null);
+                    b.ToTable("Packages");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.PackageFacilities", b =>
@@ -366,7 +368,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("PackageId");
 
-                    b.ToTable("PackageFacilities", (string)null);
+                    b.ToTable("PackageFacilities");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Reservation", b =>
@@ -395,9 +397,6 @@ namespace Booking.Infrastructure.Migrations
                     b.Property<string>("PaymentIntentId")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RoomId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("datetime2");
 
@@ -407,11 +406,6 @@ namespace Booking.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
-
-                    b.ToTable("Reservations", (string)null);
-                    b.HasIndex("RoomId")
-                        .IsUnique()
-                        .HasFilter("[RoomId] IS NOT NULL");
 
                     b.ToTable("Reservations");
                 });
@@ -458,7 +452,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("OwnerId");
 
-                    b.ToTable("Restaurants", (string)null);
+                    b.ToTable("Restaurants");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Reviews", b =>
@@ -490,7 +484,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("HotelId");
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Room", b =>
@@ -523,6 +517,8 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("HotelId");
 
+                    b.HasIndex("ReservationId");
+
                     b.ToTable("Rooms");
                 });
 
@@ -546,7 +542,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoomFacilities", (string)null);
+                    b.ToTable("RoomFacilities");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.UserRefreshToken", b =>
@@ -585,7 +581,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UsersRefreshTokens", (string)null);
+                    b.ToTable("UsersRefreshTokens");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.WishList", b =>
@@ -608,7 +604,22 @@ namespace Booking.Infrastructure.Migrations
                         .IsUnique()
                         .HasFilter("[ClientId] IS NOT NULL");
 
-                    b.ToTable("WishList", (string)null);
+                    b.ToTable("WishList");
+                });
+
+            modelBuilder.Entity("HotelWishList", b =>
+                {
+                    b.Property<int>("HotelsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("WishListsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("HotelsId", "WishListsId");
+
+                    b.HasIndex("WishListsId");
+
+                    b.ToTable("HotelWishList");
                 });
 
             modelBuilder.Entity("MealsPackage", b =>
@@ -623,7 +634,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("PackagesId");
 
-                    b.ToTable("MealsPackage", (string)null);
+                    b.ToTable("MealsPackage");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<int>", b =>
@@ -771,7 +782,7 @@ namespace Booking.Infrastructure.Migrations
 
                     b.HasIndex("RoomFacilitiesId");
 
-                    b.ToTable("PackageRoomFacilities", (string)null);
+                    b.ToTable("PackageRoomFacilities");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Admin", b =>
@@ -789,7 +800,7 @@ namespace Booking.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("UserId");
 
-                    b.OwnsOne("Booking.Domain.Entities.Client.Address#Booking.Domain.Entities.Address", "Address", b1 =>
+                    b.OwnsOne("Booking.Domain.Entities.Address", "Address", b1 =>
                         {
                             b1.Property<int>("ClientId")
                                 .HasColumnType("int");
@@ -805,7 +816,7 @@ namespace Booking.Infrastructure.Migrations
 
                             b1.HasKey("ClientId");
 
-                            b1.ToTable("Clients", (string)null);
+                            b1.ToTable("Clients");
 
                             b1.WithOwner()
                                 .HasForeignKey("ClientId");
@@ -818,6 +829,12 @@ namespace Booking.Infrastructure.Migrations
 
             modelBuilder.Entity("Booking.Domain.Entities.Complains", b =>
                 {
+                    b.HasOne("Booking.Domain.Entities.Admin", "Admin")
+                        .WithMany("Complains")
+                        .HasForeignKey("AdminId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Booking.Domain.Entities.Client", "Client")
                         .WithMany("Complains")
                         .HasForeignKey("ClientId")
@@ -830,16 +847,11 @@ namespace Booking.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Booking.Domain.Entities.Owner", "Owner")
-                        .WithMany("Complains")
-                        .HasForeignKey("OwnerId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                    b.Navigation("Admin");
 
                     b.Navigation("Client");
 
                     b.Navigation("Hotel");
-
-                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Hotel", b =>
@@ -850,7 +862,7 @@ namespace Booking.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.OwnsOne("Booking.Domain.Entities.Hotel.Address#Booking.Domain.Entities.Address", "Address", b1 =>
+                    b.OwnsOne("Booking.Domain.Entities.Address", "Address", b1 =>
                         {
                             b1.Property<int>("HotelId")
                                 .HasColumnType("int");
@@ -866,7 +878,7 @@ namespace Booking.Infrastructure.Migrations
 
                             b1.HasKey("HotelId");
 
-                            b1.ToTable("Hotels", (string)null);
+                            b1.ToTable("Hotels");
 
                             b1.WithOwner()
                                 .HasForeignKey("HotelId");
@@ -898,7 +910,7 @@ namespace Booking.Infrastructure.Migrations
 
             modelBuilder.Entity("Booking.Domain.Entities.Identity.User", b =>
                 {
-                    b.OwnsOne("Booking.Domain.Entities.Identity.User.Address#Booking.Domain.Entities.Address", "Address", b1 =>
+                    b.OwnsOne("Booking.Domain.Entities.Address", "Address", b1 =>
                         {
                             b1.Property<int>("UserId")
                                 .HasColumnType("int");
@@ -914,7 +926,7 @@ namespace Booking.Infrastructure.Migrations
 
                             b1.HasKey("UserId");
 
-                            b1.ToTable("AspNetUsers", (string)null);
+                            b1.ToTable("AspNetUsers");
 
                             b1.WithOwner()
                                 .HasForeignKey("UserId");
@@ -984,13 +996,7 @@ namespace Booking.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Booking.Domain.Entities.Room", "Rooms")
-                        .WithOne("Reservation")
-                        .HasForeignKey("Booking.Domain.Entities.Reservation", "RoomId");
-
                     b.Navigation("Client");
-
-                    b.Navigation("Rooms");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.Restaurant", b =>
@@ -1033,7 +1039,13 @@ namespace Booking.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Booking.Domain.Entities.Reservation", "Reservation")
+                        .WithMany("Rooms")
+                        .HasForeignKey("ReservationId");
+
                     b.Navigation("Hotel");
+
+                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.UserRefreshToken", b =>
@@ -1054,6 +1066,21 @@ namespace Booking.Infrastructure.Migrations
                         .HasForeignKey("Booking.Domain.Entities.WishList", "ClientId");
 
                     b.Navigation("Client");
+                });
+
+            modelBuilder.Entity("HotelWishList", b =>
+                {
+                    b.HasOne("Booking.Domain.Entities.Hotel", null)
+                        .WithMany()
+                        .HasForeignKey("HotelsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Booking.Domain.Entities.WishList", null)
+                        .WithMany()
+                        .HasForeignKey("WishListsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("MealsPackage", b =>
@@ -1137,6 +1164,11 @@ namespace Booking.Infrastructure.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Booking.Domain.Entities.Admin", b =>
+                {
+                    b.Navigation("Complains");
+                });
+
             modelBuilder.Entity("Booking.Domain.Entities.Client", b =>
                 {
                     b.Navigation("Complains");
@@ -1172,8 +1204,6 @@ namespace Booking.Infrastructure.Migrations
 
             modelBuilder.Entity("Booking.Domain.Entities.Owner", b =>
                 {
-                    b.Navigation("Complains");
-
                     b.Navigation("Hotels");
 
                     b.Navigation("Offers");
@@ -1186,11 +1216,14 @@ namespace Booking.Infrastructure.Migrations
                     b.Navigation("PackageFacilities");
                 });
 
+            modelBuilder.Entity("Booking.Domain.Entities.Reservation", b =>
+                {
+                    b.Navigation("Rooms");
+                });
+
             modelBuilder.Entity("Booking.Domain.Entities.Room", b =>
                 {
                     b.Navigation("Packages");
-
-                    b.Navigation("Reservation");
                 });
 
             modelBuilder.Entity("Booking.Domain.Entities.WishList", b =>

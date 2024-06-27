@@ -27,6 +27,8 @@ public class BookingDbContext(DbContextOptions options) : IdentityDbContext<User
     public DbSet<Room> Rooms { get; set; }
     public DbSet<RoomFacilities> RoomFacilities { get; set; }
     public DbSet<WishList> WishList { get; set; }
+
+    public DbSet <HotelWishList> HotelWishLists { get; set; }
     public DbSet<UserRefreshToken> UsersRefreshTokens { get; set; }
 
     public DbSet<Images> images { get; set; }
@@ -36,8 +38,7 @@ public class BookingDbContext(DbContextOptions options) : IdentityDbContext<User
            .OwnsOne(res => res.Address);
 
         builder.Entity<Hotel>()
-         .OwnsOne(res => res.Address);
-
+                 .OwnsOne(res => res.Address);
         builder.Entity<Client>()
          .OwnsOne(res => res.Address);
 
@@ -63,6 +64,22 @@ public class BookingDbContext(DbContextOptions options) : IdentityDbContext<User
     .HasForeignKey(c => c.OwnerId)
     .OnDelete(DeleteBehavior.Restrict);
 
+
+        builder.Entity<HotelWishList>()
+                .HasKey(hw => new { hw.HotelsId, hw.WishListsId }); // Composite key
+
+        builder.Entity<HotelWishList>()
+.          ToTable("HotelWishList");
+
+        builder.Entity<HotelWishList>()
+            .HasOne(hw => hw.Hotel)
+            .WithMany(h => h.HotelWishLists)
+            .HasForeignKey(hw => hw.HotelsId);
+
+        builder.Entity<HotelWishList>()
+            .HasOne(hw => hw.WishList)
+            .WithMany(w => w.HotelWishLists)
+            .HasForeignKey(hw => hw.WishListsId);
 
         base.OnModelCreating(builder);
     }

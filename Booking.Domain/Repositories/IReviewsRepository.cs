@@ -11,5 +11,8 @@ namespace Booking.Domain.Repositories
     {
         Task<decimal?> GetTotalAverageReviews();
         Task<IEnumerable<Reviews>> GetAllReviewsAync();
+
+        Task InsertReview(Reviews review);
+
     }
 }

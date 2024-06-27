@@ -18,11 +18,14 @@ namespace Booking.Domain.Entities
         public virtual List<Restaurant>? Restaurants { get; set; }
         public int OwnerId { get; set; }
         public virtual Owner? Owner { get; set; }
-        public virtual List<WishList>? WishLists { get; set; }
+        //public virtual List<WishList>? WishLists { get; set; }
         public virtual List<Reviews>? Reviews { get; set; }
         public virtual List<Offer> Offers { get; set; }
         public virtual List<Room> Rooms { get; set; }
         public virtual List<Complains>? Complains { get; set; }
         public virtual List<Images>? Images { get; set; } = new List<Images>();
+        public virtual List<HotelWishList> HotelWishLists { get; set; } = new List<HotelWishList>();
+
+
     }
 }
