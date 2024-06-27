@@ -23,7 +23,6 @@ namespace Booking.Application.ApplicationUser.Mapping
                   .ForMember(offer => offer.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted))
                   .ForMember(offer => offer.Discount, opt => opt.MapFrom(src => src.Discount))
                   .ForMember(offer => offer.OwnerId, opt => opt.MapFrom(src => src.OwnerId));
-                  //.ForMember(offer => offer.Hotel, opt => opt.MapFrom(src => src.Hotel));
 
             // Mapping from Hotel to HotelDto
             CreateMap<Offer, OfferDto>()
@@ -32,7 +31,6 @@ namespace Booking.Application.ApplicationUser.Mapping
                 .ForMember(dest => dest.EndDate, opt => opt.MapFrom(src => src.EndDate))
                 .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted))
                 .ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src => src.OwnerId));
-              //  .ForMember(dest => dest.Hotel, opt => opt.MapFrom(src => src.Hotel));
 
 
             CreateMap<Hotel, HotelOfferDto>()

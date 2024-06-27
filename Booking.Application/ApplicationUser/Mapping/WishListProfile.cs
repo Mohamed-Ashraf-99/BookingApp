@@ -22,12 +22,8 @@ namespace Booking.Application.ApplicationUser.Mapping
 
             CreateMap<Hotel, HotelWishListDto>()
                 .ForMember(dest => dest.Address, opt => opt.MapFrom(src => src.Address))
-                //.ForMember(dest => dest.Restaurants, opt => opt.MapFrom(src => src.Restaurants))
                 .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
                 .ForMember(dest => dest.Reviews, opt => opt.MapFrom(src => src.Reviews))
-                //.ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers))
-                //.ForMember(dest => dest.Rooms, opt => opt.MapFrom(src => src.Rooms))
-                //.ForMember(dest => dest.Complains, opt => opt.MapFrom(src => src.Complains))
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images))
                 .ReverseMap();
 

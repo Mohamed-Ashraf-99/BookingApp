@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Booking.Application.ApplicationUser.Mapping
 {
-    public class HotelProfile : Profile
+    public class HotelProfile : RestaurantBaseProfile
     {
         public HotelProfile()
         {
@@ -23,7 +23,6 @@ namespace Booking.Application.ApplicationUser.Mapping
                 .ForMember(dest => dest.Complains, opt => opt.MapFrom(src => src.Complains))
                 .ForMember(dest => dest.Rooms, opt => opt.MapFrom(src => src.Rooms))
                 .ForMember(dest => dest.Restaurants, opt => opt.MapFrom(src => src.Restaurants))
-                //.ForMember(dest => dest.WishLists, opt => opt.MapFrom(src => src.WishLists))
                 .ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers))
                 .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
@@ -40,7 +39,6 @@ namespace Booking.Application.ApplicationUser.Mapping
                 .ForMember(dest => dest.Complains, opt => opt.MapFrom(src => src.Complains))
                 .ForMember(dest => dest.Rooms, opt => opt.MapFrom(src => src.Rooms))
                 .ForMember(dest => dest.Restaurants, opt => opt.MapFrom(src => src.Restaurants))
-                //.ForMember(dest => dest.WishLists, opt => opt.MapFrom(src => src.WishLists))
                 .ForMember(dest => dest.Offers, opt => opt.MapFrom(src => src.Offers))
                 .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
                 .ForMember(dest => dest.Images, opt => opt.MapFrom(src => src.Images));
@@ -118,31 +116,7 @@ namespace Booking.Application.ApplicationUser.Mapping
             CreateMap<Owner, OwnerDto>();
             CreateMap<OwnerDto, Owner>();
 
-            CreateMap<Restaurant, RestaurantDto>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Rate, opt => opt.MapFrom(src => src.Rate))
-                .ForMember(dest => dest.Ambience, opt => opt.MapFrom(src => src.Ambience))
-                .ForMember(dest => dest.Cuisine, opt => opt.MapFrom(src => src.Cuisine))
-                .ForMember(dest => dest.DietaryOptions, opt => opt.MapFrom(src => src.DietaryOptions))
-                .ForMember(dest => dest.OpenFor, opt => opt.MapFrom(src => src.OpenFor))
-                .ForMember(dest => dest.HotelId, opt => opt.MapFrom(src => src.HotelId))
-               // .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
-                .ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src => src.OwnerId))
-                .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted));
-
-            CreateMap<RestaurantDto, Restaurant>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
-                .ForMember(dest => dest.Name, opt => opt.MapFrom(src => src.Name))
-                .ForMember(dest => dest.Rate, opt => opt.MapFrom(src => src.Rate))
-                .ForMember(dest => dest.Ambience, opt => opt.MapFrom(src => src.Ambience))
-                .ForMember(dest => dest.Cuisine, opt => opt.MapFrom(src => src.Cuisine))
-                .ForMember(dest => dest.DietaryOptions, opt => opt.MapFrom(src => src.DietaryOptions))
-                .ForMember(dest => dest.OpenFor, opt => opt.MapFrom(src => src.OpenFor))
-                .ForMember(dest => dest.HotelId, opt => opt.MapFrom(src => src.HotelId))
-               // .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
-                .ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src => src.OwnerId))
-                .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted));
+            
         }
     }
 }
