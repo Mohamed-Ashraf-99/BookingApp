@@ -9,7 +9,7 @@ public class Reservation
     public DateTime StartDate { get; set; }
     public DateTime EndDate { get; set; }
     public int NumberOfGuests { get; set; }
-    public bool IsDeleted { get; set; }
+    public bool IsDeleted { get; set; } = false;
     public virtual Client? Client { get; set; }
     public int ClientId { get; set; }
     public string? PaymentIntentId  { get; set; }
