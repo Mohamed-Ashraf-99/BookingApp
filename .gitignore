@@ -491,3 +491,5 @@ $RECYCLE.BIN/
 /Booking.Application/bin/Debug/net8.0
 /Booking.Application/obj/Debug/net8.0/ref
 /Booking.Application/obj/Debug/net8.0
+/Booking.Infrastructure/Migrations/20240625104811_AddHotelsToWishList.cs
+/Booking.Infrastructure/Migrations/20240625104811_AddHotelsToWishList.Designer.cs
