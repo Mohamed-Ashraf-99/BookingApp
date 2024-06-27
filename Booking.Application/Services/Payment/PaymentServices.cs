@@ -84,7 +84,7 @@ public class PaymentServices : IPaymentServices
 
 
 
-    public async Task<string> Success(CreateReservationCommand? command)
+    public async Task<string> Success(CreateReservationCommand command)
     {
         var user = await _currentUserService.GetUserAsync();
         var cleintId = await _clientRepository.GetClientIdByUserId(user.Id);

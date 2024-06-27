@@ -10,8 +10,8 @@ public class CreateReservationCommand : IRequest<string>
     public int NumberOfGuests { get; set; }
     public int? ClientId { get; set; }
     public string? PaymentIntentId { get; set; }
-    public decimal Amount { get; set; }
-    public int RoomId { get; set; }
+    public decimal? Amount { get; set; }
+    public int? RoomId { get; set; }
     public ReservationState? State { get; set; } = ReservationState.Pending;
 
 }
