@@ -9,8 +9,8 @@ using System.Threading.Tasks;
 
 namespace Booking.Application.ApplicationUser.Queries.GetWishListByClientId
 {
-    public class GetWishListByClientIdListQuery(int clientId) : IRequest<ClientWishListDto>
+    public class GetWishListByClientIdListQuery(int userId) : IRequest<ClientWishListDto>
     {
-        public int ClientId { get; set; } = clientId;
+        public int userId { get; set; } = userId;
     }
 }

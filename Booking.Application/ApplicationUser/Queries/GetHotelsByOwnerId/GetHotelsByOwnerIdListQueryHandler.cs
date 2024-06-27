@@ -14,7 +14,7 @@ namespace Booking.Application.ApplicationUser.Queries.GetHotelsByOwnerId
 {
     public class GetHotelsByOwnerIdListQueryHandler(ILogger<GetHotelsByOwnerIdListQueryHandler> _logger,
     IMapper _mapper,
-    IHotelRepository _hotelRepository) : IRequestHandler<GetHotelsByOwnerIdListQuery, IEnumerable<HotelDto>>
+    IHotelRepository _hotelRepository , IOwnerRepository ownerRepository) : IRequestHandler<GetHotelsByOwnerIdListQuery, IEnumerable<HotelDto>>
     {
 
 
@@ -22,7 +22,8 @@ namespace Booking.Application.ApplicationUser.Queries.GetHotelsByOwnerId
         {
             try
             {
-                _logger.LogInformation($"Handling GetHotelsByOwnerIdListQuery for OwnerId {request.OwnerId}");
+                request.UserId= await ownerRepository.GetOwnerIdByUserId(request.UserId); ;
+                _logger.LogInformation($"Handling GetHotelsByOwnerIdListQuery for OwnerId {request.UserId}");
 
                 if (cancellationToken.IsCancellationRequested)
                 {
@@ -30,15 +31,15 @@ namespace Booking.Application.ApplicationUser.Queries.GetHotelsByOwnerId
                     cancellationToken.ThrowIfCancellationRequested();
                 }
 
-                var hotels = await _hotelRepository.GetHotelByOwnerIdAsync(request.OwnerId);
+                var hotels = await _hotelRepository.GetHotelByOwnerIdAsync(request.UserId);
                 if (hotels == null || !hotels.Any())
                 {
-                    _logger.LogWarning($"No hotels found for OwnerId {request.OwnerId}");
+                    _logger.LogWarning($"No hotels found for OwnerId {request.UserId}");
                     return new List<HotelDto>();
                 }
 
                 var hotelDtos = _mapper.Map<IEnumerable<HotelDto>>(hotels);
-                _logger.LogInformation($"Successfully retrieved and mapped hotels for OwnerId {request.OwnerId}");
+                _logger.LogInformation($"Successfully retrieved and mapped hotels for OwnerId {request.UserId}");
 
                 return hotelDtos;
             }
@@ -49,7 +50,7 @@ namespace Booking.Application.ApplicationUser.Queries.GetHotelsByOwnerId
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while handling GetHotelsByOwnerIdListQuery for OwnerId {request.OwnerId}");
+                _logger.LogError(ex, $"An error occurred while handling GetHotelsByOwnerIdListQuery for OwnerId {request.UserId}");
                 throw new ApplicationException("An unexpected error occurred while retrieving hotels by owner", ex);
             }
         }

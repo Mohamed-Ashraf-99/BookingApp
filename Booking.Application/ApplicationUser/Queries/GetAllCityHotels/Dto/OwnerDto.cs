@@ -11,7 +11,6 @@ namespace Booking.Application.ApplicationUser.Queries.GetAllCityHotels.Dto
     public class OwnerDto
     {
         public int Id { get; set; }
-        public User User { get; set; }
         public List<OfferDto> Offers { get; set; }
         public List<RestaurantDto> Restaurants { get; set; }
         public bool? IsDeleted { get; set; }

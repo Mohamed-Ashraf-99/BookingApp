@@ -9,7 +9,7 @@ namespace Booking.Application.ApplicationUser.Commands.AddHotelsToWishList
 {
     public class AddHotelsToWishListCommand : IRequest<string>
     {
-        public int clientId { get; set; } 
+        public int UserId { get; set; } 
         public int HotelId { get; set; } 
     }
 }

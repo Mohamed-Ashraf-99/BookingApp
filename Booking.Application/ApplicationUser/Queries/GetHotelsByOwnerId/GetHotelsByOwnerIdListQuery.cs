@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace Booking.Application.ApplicationUser.Queries.GetHotelsByOwnerId
 {
-    public class GetHotelsByOwnerIdListQuery (int ownerId): IRequest<IEnumerable<HotelDto>>
+    public class GetHotelsByOwnerIdListQuery (int userId): IRequest<IEnumerable<HotelDto>>
     {
-        public int OwnerId { get; set; } = ownerId;
+        public int UserId { get; set; } = userId;
     }
 }

@@ -16,7 +16,7 @@ namespace Booking.Application.ApplicationUser.Queries.GetWishListByClientId
 {
     public class GetWishListByClientIdListQueryHandler(ILogger<GetOffersByHotelIdListQueryHandler> _logger
         , IMapper mapper
-        , IWishListRepository _WishListRepository) : IRequestHandler<GetWishListByClientIdListQuery, ClientWishListDto>
+        , IWishListRepository _WishListRepository , IClientRepository clientRepository) : IRequestHandler<GetWishListByClientIdListQuery, ClientWishListDto>
     {
         public async Task<ClientWishListDto> Handle(GetWishListByClientIdListQuery request, CancellationToken cancellationToken)
         {
@@ -29,9 +29,9 @@ namespace Booking.Application.ApplicationUser.Queries.GetWishListByClientId
                     _logger.LogWarning("Cancellation requested for GetWishListByClientIdListQuery");
                     cancellationToken.ThrowIfCancellationRequested();
                 }
-
+                request.userId = await clientRepository.GetClientIdByUserId(request.userId);
                 // Retrieve the wishlist from the repository based on the client's Id
-                var wishList = await _WishListRepository.GetWishListByClientIdAsync(request.ClientId);
+                var wishList = await _WishListRepository.GetWishListByClientIdAsync(request.userId);
 
                 // Map the retrieved wishlist entity to WishListDto using AutoMapper
                 var wishListDto = mapper.Map<ClientWishListDto>(wishList);
