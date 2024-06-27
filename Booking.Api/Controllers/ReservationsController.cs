@@ -36,50 +36,5 @@ namespace Booking.Api.Controllers
             return Ok(result);
         }
 
-        //[HttpPost("refund-payment")]
-        //public async Task<IActionResult> RefundPayment(int reservationId, [FromBody] RefundPaymentCommand command)
-        //{
-        //    if (command.ReservationId != reservationId)
-        //    {
-        //        return BadRequest(new { Message = "ReservationId in the URL does not match with the request body." });
-        //    }
-
-        //    try
-        //    {
-        //        bool result = await _mediator.Send(command);
-
-        //        if (result)
-        //        {
-        //            return Ok(new { Message = "Payment refunded successfully." });
-        //        }
-        //        else
-        //        {
-        //            return BadRequest(new { Message = "Failed to refund payment." });
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error refunding payment.");
-        //        return StatusCode(500, new { Message = "An error occurred while refunding payment." });
-        //    }
-        //}
-
-        //[HttpPost("confirm-payment-intent")]
-        //public async Task<IActionResult> ConfirmPaymentIntent([FromBody] ConfirmPaymentIntentCommand command)
-        //{
-        //    try
-        //    {
-        //        bool result = await _mediator.Send(command);
-        //        if (result)
-        //            return Ok("Payment intent confirmed successfully");
-        //        else
-        //            return BadRequest("Failed to confirm payment intent");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        _logger.LogError(ex, "Error confirming payment intent");
-        //        return StatusCode(500, "An error occurred while confirming payment intent");
-        //    }
-        //}
     }
 }
