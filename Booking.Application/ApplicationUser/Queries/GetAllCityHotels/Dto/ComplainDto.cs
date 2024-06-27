@@ -17,7 +17,9 @@ namespace Booking.Application.ApplicationUser.Queries.GetAllCityHotels.Dto
         public int HotelId { get; set; }
         public Admin Admin { get; set; }
         public int AdminId { get; set; }
-        public Client Client { get; set; }
+        //public Client Client { get; set; }
         public int ClientId { get; set; }
+
+        public string ClientName { get; set; }
     }
 }

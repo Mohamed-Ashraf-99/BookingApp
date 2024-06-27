@@ -17,7 +17,7 @@ namespace Booking.Application.ApplicationUser.Queries.GetAllCityHotels.Dto
         public DietaryOptions? DietaryOptions { get; set; }
         public OpenFor? OpenFor { get; set; }
         public int? HotelId { get; set; }
-        public OwnerDto Owner { get; set; }
+        public String OwnerName { get; set; }
         public int? OwnerId { get; set; }
         public bool IsDeleted { get; set; }
     }

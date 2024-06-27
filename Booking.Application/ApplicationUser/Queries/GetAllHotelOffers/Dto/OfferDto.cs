@@ -18,7 +18,7 @@ namespace Booking.Application.ApplicationUser.Queries.GetAllHotelOffers.Dto
         public int OwnerId { get; set; }
         public int HotelId { get; set; }
 
-        public HotelOfferDto Hotel { get; set; }
+      //  public HotelOfferDto Hotel { get; set; }
     }
 
 }

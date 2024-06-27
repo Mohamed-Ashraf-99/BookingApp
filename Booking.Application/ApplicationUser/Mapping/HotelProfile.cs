@@ -127,7 +127,7 @@ namespace Booking.Application.ApplicationUser.Mapping
                 .ForMember(dest => dest.DietaryOptions, opt => opt.MapFrom(src => src.DietaryOptions))
                 .ForMember(dest => dest.OpenFor, opt => opt.MapFrom(src => src.OpenFor))
                 .ForMember(dest => dest.HotelId, opt => opt.MapFrom(src => src.HotelId))
-                .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
+               // .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
                 .ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src => src.OwnerId))
                 .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted));
 
@@ -140,7 +140,7 @@ namespace Booking.Application.ApplicationUser.Mapping
                 .ForMember(dest => dest.DietaryOptions, opt => opt.MapFrom(src => src.DietaryOptions))
                 .ForMember(dest => dest.OpenFor, opt => opt.MapFrom(src => src.OpenFor))
                 .ForMember(dest => dest.HotelId, opt => opt.MapFrom(src => src.HotelId))
-                .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
+               // .ForMember(dest => dest.Owner, opt => opt.MapFrom(src => src.Owner))
                 .ForMember(dest => dest.OwnerId, opt => opt.MapFrom(src => src.OwnerId))
                 .ForMember(dest => dest.IsDeleted, opt => opt.MapFrom(src => src.IsDeleted));
         }
