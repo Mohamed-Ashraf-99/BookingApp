@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Booking.Domain.Repositories
 {
-    internal class IOwnerRepository
+    public interface IOwnerRepository
     {
+        Task<int> GetOwnerIdByUserId(int userId);
     }
 }

@@ -30,7 +30,7 @@ namespace Booking.Application.ApplicationUser.Queries.GetHotelsByOwnerId
                     _logger.LogWarning("Cancellation requested for GetHotelsByOwnerIdListQuery");
                     cancellationToken.ThrowIfCancellationRequested();
                 }
-
+                
                 var hotels = await _hotelRepository.GetHotelByOwnerIdAsync(request.UserId);
                 if (hotels == null || !hotels.Any())
                 {
