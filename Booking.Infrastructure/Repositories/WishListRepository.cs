@@ -38,7 +38,7 @@ namespace Booking.Infrastructure.Repositories
                    .ThenInclude(hw => hw.Hotel)
                    .ThenInclude(hw => hw.Owner)
                  .Include(hw=>hw.Client)
-                .FirstOrDefaultAsync(w => w.ClientId == clientId);
+                .FirstOrDefaultAsync(w => w.ClientId == clientId && w.IsDeleted!=true);
         }
     }
 }
