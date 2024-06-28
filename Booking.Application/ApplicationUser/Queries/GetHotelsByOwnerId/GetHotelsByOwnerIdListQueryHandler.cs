@@ -22,7 +22,7 @@ namespace Booking.Application.ApplicationUser.Queries.GetHotelsByOwnerId
         {
             try
             {
-                request.UserId= await ownerRepository.GetOwnerIdByUserId(request.UserId); ;
+                request.UserId = await ownerRepository.GetOwnerIdByUserId(request.UserId);
                 _logger.LogInformation($"Handling GetHotelsByOwnerIdListQuery for OwnerId {request.UserId}");
 
                 if (cancellationToken.IsCancellationRequested)
