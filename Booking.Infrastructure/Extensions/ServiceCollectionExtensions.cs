@@ -1,5 +1,6 @@
 ﻿using Booking.Application.Authentication.Helpers;
 using Booking.Application.Emails.Helpers;
+using Booking.Application.Services.ApplicationUser;
 using Booking.Domain.Entities.Identity;
 using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
@@ -9,6 +10,7 @@ using Hangfire;
 using Hangfire.SqlServer;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,7 +31,7 @@ public static class ServiceCollectionExtensions
             options.UseSqlServer(connectionString)
                    .EnableSensitiveDataLogging());
 
-        // Add Hangfire Configurations
+        // Add HangFire Configurations
         services.AddHangfire(config =>
             config.UseSqlServerStorage(connectionString, new SqlServerStorageOptions
             {
@@ -60,7 +62,7 @@ public static class ServiceCollectionExtensions
             options.User.RequireUniqueEmail = true;
 
             // Sign-in settings 
-            options.SignIn.RequireConfirmedEmail = false;
+            options.SignIn.RequireConfirmedEmail = true;
         })
         .AddEntityFrameworkStores<BookingDbContext>()
         .AddDefaultTokenProviders();
@@ -146,6 +148,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IRoomRepository, RoomRepository>();
         services.AddScoped<IClientRepository, ClientRepository>();
         services.AddScoped<IComplainsRepository, ComplainsRepository>();
+        services.AddScoped<IApplicationUserService, ApplicationUserService>();
+        services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
     }
 }

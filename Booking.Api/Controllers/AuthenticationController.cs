@@ -13,7 +13,7 @@ namespace Booking.Api.Controllers
     [Route("api/[controller]")]
     public class AuthenticationController(IMediator _mediator) : ControllerBase
     {
-        [HttpPost]
+        [HttpGet("Login")] 
         public async Task<IActionResult> Login([FromBody] SignInCommand signInCommand)
         {
             var response = await _mediator.Send(signInCommand);
@@ -51,13 +51,13 @@ namespace Booking.Api.Controllers
             return Ok(result);
         }
 
-        //    [HttpGet("ConfirmEmail")]
-        //    public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailQuery confirmEmailQuery)
-        //    {
-        //        var response = await _mediator.Send(confirmEmailQuery);
-        //        return Ok(response);
-        //    }
-        //}
+        [HttpGet("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] ConfirmEmailQuery confirmEmailQuery)
+        {
+            var response = await _mediator.Send(confirmEmailQuery);
+            return Redirect("http://localhost:4200/login");
 
+        }
     }
 }
+

@@ -1,4 +1,5 @@
-﻿using Booking.Application.Services.Authentication;
+﻿using Booking.Application.Services.ApplicationUser;
+using Booking.Application.Services.Authentication;
 using Booking.Application.Services.Authorization;
 using Booking.Application.Services.CurrentUser;
 using Booking.Application.Services.Email;

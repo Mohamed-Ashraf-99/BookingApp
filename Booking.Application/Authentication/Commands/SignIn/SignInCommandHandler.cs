@@ -30,6 +30,12 @@ public class SignInCommandHandler(ILogger<SignInCommandHandler> _logger,
             }
 
             var signInResult = await _signInManager.CheckPasswordSignInAsync(user, request.Password, false);
+            
+            // Check if the email confirmed
+            if(!user.EmailConfirmed)
+            {
+                throw new SignInError("Please confirm your email!");
+            }
 
             if (!signInResult.Succeeded)
             {

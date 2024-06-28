@@ -7,6 +7,9 @@ using Booking.Api.Middlewares;
 using Booking.Application.Extensions;
 using Serilog;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,10 +45,19 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration);
 });
 
+builder.Services.AddScoped<IUrlHelper>(x =>
+{
+    var actionContext = x.GetRequiredService<IActionContextAccessor>().ActionContext;
+    var factory = x.GetRequiredService<IUrlHelperFactory>();
+    return factory.GetUrlHelper(actionContext);
+});
+
 var app = builder.Build();
 
 // Use CORS
 app.UseCors("AllowAllOrigins");
+
+
 
 // Use custom Middleware
 app.UseMiddleware<ErrorHandlingMiddleware>();
@@ -58,8 +70,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-
-
 app.UseHttpsRedirection();
 
 app.UseRouting();
@@ -70,7 +80,7 @@ app.UseAuthorization();
 
 app.UseHangfireDashboard("/hangfireDashboard");
 
-// Configure Hangfire recurring job scheduling within a method
+// Configure HangFire recurring job scheduling within a method
 using (var scope = app.Services.CreateScope())
 {
     var scheduler = scope.ServiceProvider.GetRequiredService<JobsScheduler>();

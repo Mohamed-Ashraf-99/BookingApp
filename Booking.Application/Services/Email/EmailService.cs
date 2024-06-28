@@ -53,11 +53,9 @@ public class EmailService : IEmailService
 
             using var client = new SmtpClient();
 
-            // Set timeout to 30 seconds (adjust as necessary)
             client.Timeout = 30000;
 
-            // Attempt to send email with retries
-            int retryCount = 3; // Number of retry attempts
+            int retryCount = 3; 
             for (int i = 0; i < retryCount; i++)
             {
                 try

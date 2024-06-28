@@ -220,7 +220,7 @@ public class AuthenticationServices : IAuthenticationServices
         var user = await _userManager.FindByIdAsync(userId.ToString());
         var confirmEmail = await _userManager.ConfirmEmailAsync(user, code);
         if (!confirmEmail.Succeeded)
-            return "ErrorWhenConfirmEmail";
+            return "Error When Confirm Email";
         return "Success";
     }
 
