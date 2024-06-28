@@ -13,7 +13,7 @@ namespace Booking.Api.Controllers
     [Route("api/[controller]")]
     public class AuthenticationController(IMediator _mediator) : ControllerBase
     {
-        [HttpGet("Login")] 
+        [HttpPost("Login")] 
         public async Task<IActionResult> Login([FromBody] SignInCommand signInCommand)
         {
             var response = await _mediator.Send(signInCommand);
