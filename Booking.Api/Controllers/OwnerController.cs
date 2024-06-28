@@ -1,4 +1,5 @@
-﻿using Booking.Application.ApplicationUser.Queries.GetHotelsByOwnerId;
+﻿using Booking.Application.ApplicationUser.Commands.OwnerCrud.AddHotels;
+using Booking.Application.ApplicationUser.Queries.GetHotelsByOwnerId;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,28 @@ namespace Booking.Api.Controllers
             else
             {
                 return NotFound($"No hotels found for the owner with ID {ownerId}.");
+            }
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> AddHotel(AddHotelsCommand command)
+        {
+            try
+            {
+                var result = await _mediator.Send(command);
+                if (result == "Owner not found")
+                {
+                   
+                    return NotFound(result);
+                }
+                
+                return Ok(result);
+            }
+            catch (System.Exception ex)
+            {
+                return BadRequest();
             }
         }
     }

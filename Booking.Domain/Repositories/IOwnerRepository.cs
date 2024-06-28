@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Booking.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,5 +10,9 @@ namespace Booking.Domain.Repositories
     public interface IOwnerRepository
     {
         Task<int> GetOwnerIdByUserId(int userId);
+
+        Task AddHotels(Hotel hotel);
+        Task AddImagesForHotels(Images image);
+
     }
 }

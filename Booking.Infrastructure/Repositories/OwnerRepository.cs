@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Repositories;
+﻿using Booking.Domain.Entities;
+using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,6 +12,18 @@ namespace Booking.Infrastructure.Repositories
 {
     public class OwnerRepository (BookingDbContext _context) : IOwnerRepository
     {
+        public async Task AddHotels(Hotel hotel)
+        {
+            await _context.Hotels.AddAsync(hotel);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task AddImagesForHotels(Images image)
+        {
+            await _context.images.AddAsync(image);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<int> GetOwnerIdByUserId(int userId)
         {
             var owner = await _context.Owner.Include(x => x.User).Where(usr => usr.User.Id == userId).FirstOrDefaultAsync();
