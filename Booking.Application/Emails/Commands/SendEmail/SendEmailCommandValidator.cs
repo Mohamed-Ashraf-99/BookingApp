@@ -10,8 +10,12 @@ public class SendEmailCommandValidator : AbstractValidator<SendEmailCommand>
             .NotEmpty().WithMessage("Email is Required")
             .NotNull().WithMessage("Email is Required");
 
-        RuleFor(x => x.Message)
+        RuleFor(x => x.Body)
             .NotEmpty().WithMessage("Message is Required")
             .NotNull().WithMessage("Message is Required");
+
+        RuleFor(x => x.Subject)
+           .NotEmpty().WithMessage("Subject is Required")
+           .NotNull().WithMessage("Subject is Required");
     }
 }

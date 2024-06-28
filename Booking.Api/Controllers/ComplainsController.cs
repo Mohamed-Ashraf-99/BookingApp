@@ -10,7 +10,7 @@ namespace Booking.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize(Roles = "User")]
+    //[Authorize(Roles = "User")]
     public class ComplainsController(IMediator _mediator) : ControllerBase
     {
         [HttpPost("create")]
@@ -19,6 +19,7 @@ namespace Booking.Api.Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
+
         [HttpGet("hotel/{hotelId}")]
         public async Task<IActionResult> GetHotelComplains(int hotelId)
         {

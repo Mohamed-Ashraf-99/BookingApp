@@ -9,7 +9,7 @@ namespace Booking.Api.Controllers;
 public class EmailController(IMediator _mediator) : ControllerBase
 {
     [HttpPost]
-    public async Task<IActionResult> SendEmail([FromBody] SendEmailCommand command)
+    public async Task<IActionResult> SendEmail([FromForm] SendEmailCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);

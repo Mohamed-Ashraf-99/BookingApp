@@ -6,6 +6,7 @@ using Booking.Infrastructure.Scheduling;
 using Booking.Api.Middlewares;
 using Booking.Application.Extensions;
 using Serilog;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -57,10 +58,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
 app.UseHttpsRedirection();
+
 app.UseRouting();
+
 app.UseAuthentication();
+
 app.UseAuthorization();
+
 app.UseHangfireDashboard("/hangfireDashboard");
 
 // Configure Hangfire recurring job scheduling within a method

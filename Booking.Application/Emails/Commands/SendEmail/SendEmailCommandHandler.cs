@@ -10,7 +10,7 @@ public class SendEmailCommandHandler(ILogger<SendEmailCommandHandler> _logger,
     public async Task<string> Handle(SendEmailCommand request, CancellationToken cancellationToken)
     {
         _logger.LogInformation($"{request.Email} Sending Email at {DateTime.Now}");
-        var response = await _emailService.SendEmailAsync(request.Email,request.Message, request.Subject);
+        var response = await _emailService.SendEmailAsync(request.Email, request.Body, request.Subject, request.Attachments);
         return response;
     }
 }

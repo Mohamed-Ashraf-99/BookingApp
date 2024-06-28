@@ -14,6 +14,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Configuration;
 using System.Text;
 
 
@@ -65,12 +67,15 @@ public static class ServiceCollectionExtensions
 
 
         JwtSettings jwtSettings = new JwtSettings();
-        EmailSettings emailSettings = new EmailSettings();
+        //EmailSettings emailSettings = new EmailSettings();
+
         configuration.GetSection(nameof(jwtSettings)).Bind(jwtSettings);
-        configuration.GetSection(nameof(emailSettings)).Bind(emailSettings);
+        //configuration.GetSection(nameof(emailSettings)).Bind(emailSettings);
+
+        services.Configure<EmailSettings>(configuration.GetSection("emailSettings"));
 
         services.AddSingleton(jwtSettings);
-        services.AddSingleton(emailSettings);
+        services.AddSingleton<EmailSettings>();
 
         services.AddAuthentication(x =>
         {
@@ -127,6 +132,8 @@ public static class ServiceCollectionExtensions
                     Array.Empty<string>()
                 }
             });
+
+         
         });
 
         services.AddScoped<IBookingSeeder, BookingSeeder>();
