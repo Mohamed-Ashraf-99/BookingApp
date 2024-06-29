@@ -43,7 +43,7 @@ namespace Booking.Application.ApplicationUser.Commands.OwnerCrud.AddHotels
                     isFirstImage = false; // Set isFirstImage to false after processing the first image
 
                     // Save the image path to the database
-                    var image = new Images { source = "/images/" + fileName, IsMain = isMain, HotelID = HotelId };
+                    var image = new Images { source = "https://localhost:7182" + "/images/" + fileName, IsMain = isMain, HotelID = HotelId };
                     ownerRepository.AddImagesForHotels(image);
                 }
             }
