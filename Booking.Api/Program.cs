@@ -45,7 +45,6 @@ var app = builder.Build();
 
 // Use CORS
 app.UseCors("AllowAllOrigins");
-
 // Use custom Middleware
 app.UseMiddleware<ErrorHandlingMiddleware>();
 app.UseMiddleware<RequestTimeLoggingMiddleware>();
@@ -58,6 +57,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+//UseStaticFiles
+app.UseStaticFiles();
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
