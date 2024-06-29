@@ -14,7 +14,19 @@ namespace Booking.Infrastructure.Repositories
     {
         public async Task<IEnumerable<Reviews>> GetAllReviewsAync()
         {
-           return await _context.Reviews.Include(r=>r.Hotel).Include(r=>r.Client).ThenInclude(r=>r.User).ToListAsync();
+            return await _context.Reviews
+                .Include(r => r.Hotel)
+                .Include(r => r.Client).ThenInclude(c => c.User)
+                .OrderByDescending(r => r.Date) 
+                .Take(10)
+                .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Reviews>> GetReviewsByHotelId(int hotelId)
+        {
+            return await _context.Reviews.Include(r=>r.Hotel)
+                .Include(r=>r.Client).ThenInclude(r => r.User)
+                .Where(r=>r.HotelId==hotelId).ToListAsync();
         }
 
         public async Task<decimal?> GetTotalAverageReviews()

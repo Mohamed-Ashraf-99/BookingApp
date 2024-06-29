@@ -14,5 +14,7 @@ namespace Booking.Domain.Repositories
 
         Task InsertReview(Reviews review);
 
+        Task<IEnumerable<Reviews>> GetReviewsByHotelId(int hotelId);
+
     }
 }
