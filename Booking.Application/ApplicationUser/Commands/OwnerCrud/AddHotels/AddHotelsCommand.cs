@@ -1,6 +1,7 @@
 ﻿using Booking.Application.ApplicationUser.Queries.GetAllCityHotels.Dto;
 using Booking.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,7 @@ namespace Booking.Application.ApplicationUser.Commands.OwnerCrud.AddHotels
 
         public int userId { get; set; }
 
-        public List<string>? imagesSource { get; set; } = new List<string>();
+        public List<IFormFile>? imagesSource { get; set; } = new List<IFormFile>();
 
         //public List<RoomDto>? rooms { get; set; } = new List<RoomDto>();
         
