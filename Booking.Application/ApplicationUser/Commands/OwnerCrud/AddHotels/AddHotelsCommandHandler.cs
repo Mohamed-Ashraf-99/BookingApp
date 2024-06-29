@@ -18,22 +18,59 @@ namespace Booking.Application.ApplicationUser.Commands.OwnerCrud.AddHotels
     IOwnerRepository ownerRepository, IWebHostEnvironment _hostingEnvironment ) : IRequestHandler<AddHotelsCommand, string>
     {
 
-        private void InsertImage(List<string> imageBase64Data, int hotelId)
+        //private void InsertImage(List<string> imagePaths, int hotelId)
+        //{
+        //    bool isFirstImage = true; // Flag to track the first image
+
+        //    foreach (var imagePath in imagePaths)
+        //    {
+        //        if (!string.IsNullOrEmpty(imagePath) /*&& File.Exists(imagePath)*/)
+        //        {
+        //            try
+        //            {
+        //                var fileName = Path.GetFileName(imagePath); // Use the provided image name
+        //                var destinationPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", fileName);
+
+        //                // Copy the image file to the server
+        //                File.Copy(imagePath, destinationPath, true);
+
+        //                // Determine IsMain based on isFirstImage flag
+        //                var isMain = isFirstImage ? 1 : 0;
+        //                isFirstImage = false; // Set isFirstImage to false after processing the first image
+
+        //                // Save the image path to the database
+        //                var image = new Images { source = "/images/" + fileName, IsMain = isMain, HotelID = hotelId };
+        //                ownerRepository.AddImagesForHotels(image);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                _logger.LogError(ex, $"Error processing image: {imagePath}");
+        //            }
+        //        }
+        //        else
+        //        {
+        //            _logger.LogWarning($"Image file not found: {imagePath}");
+        //        }
+        //    }
+        //}
+
+        private void InsertImage(List<IFormFile> ImageUrl, int HotelId)
         {
             bool isFirstImage = true; // Flag to track the first image
 
-            foreach (var base64Data in imageBase64Data)
+            foreach (var file in ImageUrl)
             {
-                if (!string.IsNullOrEmpty(base64Data))
+                if (file != null && file.Length > 0)
                 {
-                    var imageBytes = Convert.FromBase64String(base64Data);
-                    var fileName = Guid.NewGuid() + ".jpg"; // Generate a unique file name
+                    var fileName = Path.GetFileName(file.FileName);
+
+                    // Construct the image path with the file name and extension
                     var imagePath = Path.Combine(_hostingEnvironment.WebRootPath, "images", fileName);
 
-                    // Save the image file to the server
+                    // Save the file to the server
                     using (var stream = new FileStream(imagePath, FileMode.Create))
                     {
-                        stream.Write(imageBytes, 0, imageBytes.Length);
+                        file.CopyTo(stream);
                     }
 
                     // Determine IsMain based on isFirstImage flag
@@ -41,17 +78,18 @@ namespace Booking.Application.ApplicationUser.Commands.OwnerCrud.AddHotels
                     isFirstImage = false; // Set isFirstImage to false after processing the first image
 
                     // Save the image path to the database
-                    var image = new Images { source = "/images/" + fileName, IsMain = isMain, HotelID = hotelId };
+                    var image = new Images { source = "/images/" + fileName, IsMain = isMain, HotelID = HotelId };
                     ownerRepository.AddImagesForHotels(image);
                 }
             }
         }
+
         public async Task<string> Handle(AddHotelsCommand request, CancellationToken cancellationToken)
         {
             try
             {
-                var ownerId = await ownerRepository.GetOwnerIdByUserId(request.userId);
-                if (ownerId == null)
+                request.userId = await ownerRepository.GetOwnerIdByUserId(request.userId);
+                if (request.userId == null)
                 {
                     _logger.LogWarning($"Owner not found for user ID {request.userId}");
                     return "Owner not found";
@@ -67,21 +105,23 @@ namespace Booking.Application.ApplicationUser.Commands.OwnerCrud.AddHotels
                         City = request.city,
                         Street = request.street,
                         PostalCode = request.postalCode
-                    }
+                    },
+                    IsDeleted = false,
+                    OwnerId= request.userId                   
                 };
 
-                ownerRepository.AddHotels(hotel);
-               
+                int hotelid= await ownerRepository.AddHotels(hotel);
 
-                InsertImage(request.imagesSource, hotel.Id);
 
-                _logger.LogInformation($"Hotel {hotel.Name} added successfully for owner {ownerId}.");
+                InsertImage(request.imagesSource, hotelid);
+
+                _logger.LogInformation($"Hotel {hotel.Name} added successfully for owner {request.userId}.");
                 return $"Hotel {hotel.Name} added successfully.";
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, "An error occurred while adding the hotel");
-                return "An error occurred while adding the hotel";
+                return ex.Message;
             }
         }
     }

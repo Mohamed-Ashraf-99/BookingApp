@@ -11,7 +11,7 @@ namespace Booking.Domain.Repositories
     {
         Task<int> GetOwnerIdByUserId(int userId);
 
-        Task AddHotels(Hotel hotel);
+        Task<int> AddHotels(Hotel hotel);
         Task AddImagesForHotels(Images image);
 
     }

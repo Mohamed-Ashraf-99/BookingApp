@@ -12,10 +12,12 @@ namespace Booking.Infrastructure.Repositories
 {
     public class OwnerRepository (BookingDbContext _context) : IOwnerRepository
     {
-        public async Task AddHotels(Hotel hotel)
+        public async Task<int> AddHotels(Hotel hotel)
         {
             await _context.Hotels.AddAsync(hotel);
             await _context.SaveChangesAsync();
+
+            return hotel.Id;
         }
 
         public async Task AddImagesForHotels(Images image)
