@@ -18,42 +18,7 @@ namespace Booking.Application.ApplicationUser.Commands.OwnerCrud.AddHotels
     IOwnerRepository ownerRepository, IWebHostEnvironment _hostingEnvironment ) : IRequestHandler<AddHotelsCommand, string>
     {
 
-        //private void InsertImage(List<string> imagePaths, int hotelId)
-        //{
-        //    bool isFirstImage = true; // Flag to track the first image
-
-        //    foreach (var imagePath in imagePaths)
-        //    {
-        //        if (!string.IsNullOrEmpty(imagePath) /*&& File.Exists(imagePath)*/)
-        //        {
-        //            try
-        //            {
-        //                var fileName = Path.GetFileName(imagePath); // Use the provided image name
-        //                var destinationPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", fileName);
-
-        //                // Copy the image file to the server
-        //                File.Copy(imagePath, destinationPath, true);
-
-        //                // Determine IsMain based on isFirstImage flag
-        //                var isMain = isFirstImage ? 1 : 0;
-        //                isFirstImage = false; // Set isFirstImage to false after processing the first image
-
-        //                // Save the image path to the database
-        //                var image = new Images { source = "/images/" + fileName, IsMain = isMain, HotelID = hotelId };
-        //                ownerRepository.AddImagesForHotels(image);
-        //            }
-        //            catch (Exception ex)
-        //            {
-        //                _logger.LogError(ex, $"Error processing image: {imagePath}");
-        //            }
-        //        }
-        //        else
-        //        {
-        //            _logger.LogWarning($"Image file not found: {imagePath}");
-        //        }
-        //    }
-        //}
-
+       
         private void InsertImage(List<IFormFile> ImageUrl, int HotelId)
         {
             bool isFirstImage = true; // Flag to track the first image

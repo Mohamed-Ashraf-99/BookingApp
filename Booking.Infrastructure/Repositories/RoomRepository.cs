@@ -11,4 +11,17 @@ public class RoomRepository(BookingDbContext _context) : IRoomRepository
     {
         return await _context.Rooms.FindAsync(id);
     }
+
+    public async Task AddRoomAsync(Room room)
+    {
+       await _context.Rooms.AddAsync(room);
+        _context.SaveChanges();
+    }
+
+    public async Task<int> GetRoomCountInHotel(int hotelId)
+    {
+        return await _context.Rooms
+                     .Where(r => r.HotelId == hotelId)
+                     .CountAsync();
+    }
 }
