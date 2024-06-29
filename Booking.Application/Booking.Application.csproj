@@ -25,6 +25,9 @@
     <Folder Include="Authentication\Mapping\" />
     <Folder Include="Emails\Mapping\" />
     <Folder Include="Emails\Queries\" />
+    <Folder Include="AdminDashboard\" />
+    <Folder Include="RegisterAsOwner\Mapping\" />
+    <Folder Include="RegisterAsOwner\Queries\" />
   </ItemGroup>
 
 </Project>

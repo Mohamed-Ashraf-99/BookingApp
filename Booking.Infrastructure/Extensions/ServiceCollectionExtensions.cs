@@ -153,6 +153,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IApplicationUserService, ApplicationUserService>();
         services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
         services.AddScoped<IAuthenticationServices, AuthenticationServices>();
+        services.AddScoped<IOwnerRepository, OwnerRepository>();
 
     }
 }

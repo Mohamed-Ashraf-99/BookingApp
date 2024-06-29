@@ -17,5 +17,7 @@ namespace Booking.Domain.Entities
         public virtual List<Complains>? Complains { get; set; }
         public bool? IsDeleted { get; set; }
         public bool? IsActive { get; set; }
+        public bool? IsVerified { get; set; } = false;
+        public string? Certificate { get; set; }
     }
 }

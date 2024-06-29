@@ -4,6 +4,7 @@ using Booking.Application.ApplicationUser.Commands.Register;
 using Booking.Application.ApplicationUser.Commands.UpdateUser;
 using Booking.Application.ApplicationUser.Queries.GetAllUsers;
 using Booking.Application.ApplicationUser.Queries.GetUserById;
+using Booking.Application.RegisterAsOwner.Commands.OwnerRegister;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,6 +17,16 @@ public class AccountController(IMediator _mediator) : ControllerBase
 {
     [HttpPost]
     public async Task<IActionResult> Register([FromBody] RegisterUserCommand registerUserCommand)
+    {
+        var response = await _mediator.Send(registerUserCommand);
+        if (response is not null)
+            return Ok(response);
+
+        return BadRequest(response);
+    }
+
+    [HttpPost("OwnerRegister")]
+    public async Task<IActionResult> OwnerRegister([FromForm] OwnerRegisterCommand registerUserCommand)
     {
         var response = await _mediator.Send(registerUserCommand);
         if (response is not null)

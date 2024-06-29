@@ -2,7 +2,11 @@
 
 
 using AutoMapper;
+using Booking.Application.RegisterAsOwner.Commands.OwnerRegister;
 using Booking.Application.Services.Email;
+using Booking.Application.Services.FileUpload;
+using Booking.Application.Services.OwnerServ;
+using Booking.Domain.Entities;
 using Booking.Domain.Entities.Identity;
 using Booking.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;
@@ -18,8 +22,71 @@ public class ApplicationUserService(ILogger<ApplicationUserService> _logger,
     IHttpContextAccessor _httpContextAccessor,
     IEmailService _emailService,
     BookingDbContext _context,
-    IUrlHelper _urlHelper) : IApplicationUserService
+    IUrlHelper _urlHelper,
+    IMapper _mapper,
+    IFileService _fileService
+    ,IOwnerService _ownerService) : IApplicationUserService
 {
+    public async Task<string> CreateOwnerAsync(User user, string password, IFormFile formFile)
+    {
+        var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            // Check if email already exists
+            var existingUser = await _userManager.FindByEmailAsync(user.Email);
+            if (existingUser != null)
+            {
+                _logger.LogWarning($"Registration failed: Email {user.Email} already exists.");
+                return "Email already exists";
+            }
+
+            // Upload certificate and get the URL
+            var certificateUrl = await _fileService.UploadImage("OwnerCertificate", formFile);
+            if (certificateUrl.StartsWith("Failed"))
+            {
+                return "Failed to upload certificate";
+            }
+
+            // Format the certificate URL
+            var context = _httpContextAccessor.HttpContext.Request;
+            var baseUrl = $"{context.Scheme}://{context.Host}/";
+            var formattedCertificateUrl = baseUrl + certificateUrl.TrimStart('/');
+
+            user.Certificate = formattedCertificateUrl;
+
+            var result = await _userManager.CreateAsync(user, password);
+
+            if (!result.Succeeded)
+            {
+                var errors = string.Join(", ", result.Errors.Select(e => e.Description));
+                _logger.LogError($"User registration failed for {user.UserName}. Errors: {errors}");
+                return $"Registration failed: {errors}";
+            }
+
+            await _userManager.AddToRoleAsync(user, "Owner");
+
+            // Create the User
+            var owner = _mapper.Map<Owner>(user);
+            owner.Certificate = formattedCertificateUrl;
+            await _ownerService.CreateOwnerAsync(owner);
+
+            // Send Confirmation mail
+            await SendEmailConfirmation(user);
+
+            await transaction.CommitAsync();
+            _logger.LogInformation($"User {user.UserName} successfully registered.");
+            return "Registration succeeded";
+        }
+        catch (Exception ex)
+        {
+            await transaction.RollbackAsync();
+            _logger.LogError($"Transaction rolled back. Error: {ex.Message}");
+            return "Failed";
+        }
+    }
+
+
+
     public async Task<string> CreateUserAsync(User user, string password)
     {
         var transaction = await _context.Database.BeginTransactionAsync();

@@ -1,8 +1,11 @@
-﻿using Booking.Application.Services.ApplicationUser;
+﻿using Booking.Application.Services;
+using Booking.Application.Services.ApplicationUser;
 using Booking.Application.Services.Authentication;
 using Booking.Application.Services.Authorization;
 using Booking.Application.Services.CurrentUser;
 using Booking.Application.Services.Email;
+using Booking.Application.Services.FileUpload;
+using Booking.Application.Services.OwnerServ;
 using Booking.Application.Services.Payment;
 using FluentValidation;
 using FluentValidation.AspNetCore;
@@ -28,6 +31,8 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddScoped<IPaymentServices, PaymentServices>();
+        services.AddScoped<IFileService, FileService>();
+        services.AddScoped<IOwnerService, OwnerService>();
         services.AddMemoryCache();
 
     }

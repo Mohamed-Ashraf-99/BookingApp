@@ -11,6 +11,8 @@ public class User : IdentityUser<int>
     public virtual ICollection<UserRefreshToken> UserRefreshTokens { get; set; }
 
     public string? Code { get; set; }
+    public string? Certificate { get; set; } 
+    public string? Image { get; set; }
     public User()
     {
         UserRefreshTokens = new HashSet<UserRefreshToken>();
