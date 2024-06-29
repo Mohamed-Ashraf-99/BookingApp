@@ -1,6 +1,4 @@
-﻿
-
-using AutoMapper;
+﻿using AutoMapper;
 using Booking.Application.Services.CurrentUser;
 using Booking.Domain.Entities;
 using Booking.Domain.Repositories;

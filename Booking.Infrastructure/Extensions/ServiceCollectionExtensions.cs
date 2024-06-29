@@ -1,6 +1,7 @@
 ﻿using Booking.Application.Authentication.Helpers;
 using Booking.Application.Emails.Helpers;
 using Booking.Application.Services.ApplicationUser;
+using Booking.Application.Services.Authentication;
 using Booking.Domain.Entities.Identity;
 using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
@@ -16,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using SchoolProject.Service.Implementations;
 using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Configuration;
 using System.Text;
@@ -150,6 +152,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IComplainsRepository, ComplainsRepository>();
         services.AddScoped<IApplicationUserService, ApplicationUserService>();
         services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+        services.AddScoped<IAuthenticationServices, AuthenticationServices>();
 
     }
 }

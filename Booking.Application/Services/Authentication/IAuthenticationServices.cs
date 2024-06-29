@@ -12,4 +12,7 @@ public interface IAuthenticationServices
     Task<JwtAuthResult> GetRefreshToken(User user, JwtSecurityToken jwtToken, DateTime? expiryDate, string refreshToken);
     Task<string> ValidateToken(string AccessToken);
     Task<string> ConfirmEmail(int? userId, string code);
+    Task<string> SendResetPasswordCode(string email);
+    Task<string> ConfirmResetPassword(string resetCode, string email);
+    Task<string> ResetPassword(string email, string password);
 }

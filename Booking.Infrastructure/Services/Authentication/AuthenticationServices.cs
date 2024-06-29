@@ -12,6 +12,11 @@ using System.Security.Cryptography;
 using System.Text;
 using Booking.Application.Services.Authentication;
 using Booking.Application.Services.CurrentUser;
+using Booking.Domain.Exceptions;
+using Booking.Application.Services.Email;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
+using Booking.Infrastructure.Persistence;
 namespace SchoolProject.Service.Implementations;
 
 public class AuthenticationServices : IAuthenticationServices
@@ -20,19 +25,27 @@ public class AuthenticationServices : IAuthenticationServices
     private readonly JwtSettings _jwtSettings;
     private readonly IRefreshTokenRepository _refreshTokenRepository;
     private readonly UserManager<User> _userManager;
-    private readonly ICurrentUserService _currentUserService;
+    private readonly IEmailService _emailService;
+    private readonly ILogger<AuthenticationServices> _logger;
+    private readonly BookingDbContext _context;
+
     #endregion
 
     #region Constructors
     public AuthenticationServices(JwtSettings jwtSettings,
                                  IRefreshTokenRepository refreshTokenRepository,
                                  UserManager<User> userManager,
-                                 ICurrentUserService currentUserService
+                                 IEmailService emailService,
+                                 ILogger<AuthenticationServices> logger,
+                                 BookingDbContext context
                           )
     {
         _jwtSettings = jwtSettings;
         _refreshTokenRepository = refreshTokenRepository;
         _userManager = userManager;
+        _emailService = emailService;
+        _logger = logger;
+        _context = context;
     }
 
 
@@ -52,7 +65,7 @@ public class AuthenticationServices : IAuthenticationServices
             IsUsed = true,
             IsRevoked = false,
             JwtId = jwtToken.Id,
-            RefreshToken =  refreshToken.Token,
+            RefreshToken = refreshToken.Token,
             Token = accessToken,
             UserId = user.Id
         };
@@ -181,6 +194,7 @@ public class AuthenticationServices : IAuthenticationServices
 
     public async Task<(string, DateTime?)> ValidateDetails(JwtSecurityToken jwtToken, string accessToken, string refreshToken)
     {
+        
         if (jwtToken == null || !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256Signature))
         {
             return ("AlgorithmIsWrong", null);
@@ -224,6 +238,157 @@ public class AuthenticationServices : IAuthenticationServices
         return "Success";
     }
 
+    #region Reset Password
+    public async Task<string> SendResetPasswordCode(string email)
+    {
+        var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            // 1. Get the user
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                return $"There are no users with Email: {email}";
+            }
+
+            // 2. Generate the reset code
+            var resetCode = GenerateRandomCodeNumber();
+
+            // 3. Update the user's code
+            user.Code = resetCode;
+            var identityResult = await _userManager.UpdateAsync(user);
+            if (!identityResult.Succeeded)
+            {
+                return "Error while updating User table";
+            }
+
+            // 4. Send the reset code via email
+            var message = await SendPasswordResetEmail(user, resetCode);
+
+            if (message is not null)
+            {
+                await transaction.CommitAsync();
+                return message;
+            }
+            else
+            {
+                return "Failed to send password reset email.";
+            }
+        }
+        catch (Exception ex)
+        {
+             await transaction.RollbackAsync();
+            _logger.LogError(ex, "An error occurred in SendResetPasswordCode method for email: {Email}", email);
+
+            return "An error occurred while processing your request. Please try again later.";
+        }
+    }
+
+    private async Task<string> SendPasswordResetEmail(User user, string resetCode)
+    {
+        var filePath = $"{Directory.GetCurrentDirectory()}\\Template\\PasswordResetEmailTemplate.html";
+        var str = new StreamReader(filePath);
+        var mailText = str.ReadToEnd();
+        str.Close();
+
+        // Replace placeholders with actual user data and reset code
+        mailText = mailText.Replace("[User's Name]", user.UserName)
+                           .Replace("[Reset Code]", resetCode)
+                           .Replace("[YourAppName]", "Tourist App");
+
+        await _emailService.SendEmailAsync(user.Email, mailText, "Password Reset Request");
+
+        return "Password reset email sent successfully.";
+    }
+
+    private string GenerateRandomCodeNumber()
+    {
+        var random = new Random();
+        string code = random.Next(0, 1000000).ToString("D6");
+        return code;
+    }
+
+    public async Task<string> ConfirmResetPassword(string resetCode, string email)
+    {
+        try
+        {
+            // 1->> Get User by email
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user is null)
+            {
+                _logger.LogWarning($"User with email '{email}' not found.");
+                return "Failed: User not found.";
+            }
+
+            // 2->> Decrypt the code from the database
+            var storedCode = user.Code;
+
+            // 3->> Check equality 
+            if (resetCode.Equals(storedCode))
+            {
+                return "Succeeded";
+            }
+            else
+            {
+                return "Failed: Invalid reset code.";
+            }
+        }
+        catch (Exception ex)
+        {
+            // Log the exception
+            _logger.LogError(ex, "An error occurred in ResetPassword method.");
+            return "Failed: An error occurred while resetting the password. Please try again later.";
+        }
+    }
+
+    public async Task<string> ResetPassword(string email, string password)
+    {
+        var transaction = _context.Database.BeginTransaction();
+
+        try
+        {
+            // 1. Find the user by email
+            var user = await _userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                _logger.LogWarning($"User with email '{email}' not found.");
+                return "Failed: User not found.";
+            }
+
+            // 2. Remove existing password (if any) and set new password
+            var removeResult = await _userManager.RemovePasswordAsync(user);
+            if (!removeResult.Succeeded)
+            {
+                var errorMessage = string.Join(", ", removeResult.Errors.Select(e => e.Description));
+                _logger.LogError($"Failed to remove existing password for user '{user.Email}': {errorMessage}");
+                return "Failed: Unable to reset password. Please try again later.";
+            }
+
+            var addResult = await _userManager.AddPasswordAsync(user, password);
+            if (!addResult.Succeeded)
+            {
+                var errorMessage = string.Join(", ", addResult.Errors.Select(e => e.Description));
+                _logger.LogError($"Failed to set new password for user '{user.Email}': {errorMessage}");
+                return "Failed: Unable to reset password. Please try again later.";
+            }
+
+            // 3. Commit transaction if everything succeeds
+            await transaction.CommitAsync();
+            return "Password reset successfully.";
+        }
+        catch (Exception ex)
+        {
+            // 4. Rollback transaction on exception
+            await transaction.RollbackAsync();
+            _logger.LogError(ex, $"An error occurred while resetting password for user '{email}'.");
+            return "Failed: An unexpected error occurred. Please try again later.";
+        }
+    }
+
+
+
+    #endregion
 
     #endregion
 }
