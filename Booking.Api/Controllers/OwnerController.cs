@@ -29,7 +29,7 @@ namespace Booking.Api.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> AddHotel(AddHotelsCommand command)
+        public async Task<IActionResult> AddHotel([FromForm] AddHotelsCommand command)
         {
             try
             {
@@ -44,7 +44,7 @@ namespace Booking.Api.Controllers
             }
             catch (System.Exception ex)
             {
-                return BadRequest();
+                return Content(ex.Message);
             }
         }
     }

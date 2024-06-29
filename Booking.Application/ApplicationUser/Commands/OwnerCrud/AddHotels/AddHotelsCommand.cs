@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Net.PeerToPeer;
 using System.Text;
@@ -13,17 +14,24 @@ namespace Booking.Application.ApplicationUser.Commands.OwnerCrud.AddHotels
 {
     public class AddHotelsCommand : IRequest<string>
     {
+        [Required]
         public string name { get; set; }
+        [Required]
 
         public string description { get; set; }
+        [Required]
 
         public int numOfStars { get; set; }
+        [Required]
 
         public string city { get; set; }
+        [Required]
 
         public string street { get; set; }
+        [Required]
 
         public string postalCode { get; set; }
+        [Required]
 
         public int userId { get; set; }
 

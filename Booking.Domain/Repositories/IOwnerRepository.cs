@@ -13,6 +13,7 @@ namespace Booking.Domain.Repositories
 
         Task<int> AddHotels(Hotel hotel);
         Task AddImagesForHotels(Images image);
+        Task UpdateChanges();
 
     }
 }

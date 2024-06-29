@@ -82,6 +82,7 @@ namespace Booking.Application.ApplicationUser.Commands.OwnerCrud.AddHotels
                     ownerRepository.AddImagesForHotels(image);
                 }
             }
+            ownerRepository.UpdateChanges();
         }
 
         public async Task<string> Handle(AddHotelsCommand request, CancellationToken cancellationToken)

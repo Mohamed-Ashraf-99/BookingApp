@@ -23,7 +23,7 @@ namespace Booking.Infrastructure.Repositories
         public async Task AddImagesForHotels(Images image)
         {
             await _context.images.AddAsync(image);
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
         }
 
         public async Task<int> GetOwnerIdByUserId(int userId)
@@ -31,6 +31,11 @@ namespace Booking.Infrastructure.Repositories
             var owner = await _context.Owner.Include(x => x.User).Where(usr => usr.User.Id == userId).FirstOrDefaultAsync();
             var ownerId = owner.Id;
             return ownerId;
+        }
+
+        public async Task UpdateChanges()
+        {
+             _context.SaveChanges();
         }
     }
 }
