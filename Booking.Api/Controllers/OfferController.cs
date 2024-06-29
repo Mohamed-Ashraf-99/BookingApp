@@ -1,4 +1,5 @@
-﻿using Booking.Application.ApplicationUser.Queries.GetAllHotelOffers;
+﻿using Booking.Application.ApplicationUser.Commands.OwnerCrud.AddOffers;
+using Booking.Application.ApplicationUser.Queries.GetAllHotelOffers;
 using Booking.Application.ApplicationUser.Queries.GetOffersByHotelId;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -41,6 +42,22 @@ namespace Booking.Api.Controllers
             else
             {
                 return NotFound($"No offers found for the hotel with ID {hotelId}.");
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddOffersForHotel([FromBody] AddOffersCommand addOffersCommand)
+        {
+            
+            var offer = await _mediator.Send(addOffersCommand);
+
+            if (offer != null )
+            {
+                return Ok(offer);
+            }
+            else
+            {
+                return BadRequest();
             }
         }
     }

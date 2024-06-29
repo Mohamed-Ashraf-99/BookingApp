@@ -12,5 +12,7 @@ namespace Booking.Domain.Repositories
         Task<IEnumerable<Offer>> GetAllOffersAsync();
 
         Task<IEnumerable<Offer>> GetOffersByHotelIdAsync(int Id);
+
+        Task AddOffer(Offer offer);
     }
 }
