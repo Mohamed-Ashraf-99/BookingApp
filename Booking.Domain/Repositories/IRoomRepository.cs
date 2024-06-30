@@ -9,4 +9,7 @@ public interface IRoomRepository
     Task AddRoomAsync(Room room);
 
     Task<int> GetRoomCountInHotel(int hotelId);
+
+
+    Task DeleteRoom(int roomId);
 }

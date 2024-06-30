@@ -24,4 +24,11 @@ public class RoomRepository(BookingDbContext _context) : IRoomRepository
                      .Where(r => r.HotelId == hotelId)
                      .CountAsync();
     }
+
+    public async Task DeleteRoom(int roomId)
+    {
+        var room = await _context.Rooms.FindAsync(roomId);
+        _context.Rooms.Remove(room);
+        await _context.SaveChangesAsync();   
+    }
 }

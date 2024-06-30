@@ -1,4 +1,6 @@
 ﻿using Booking.Application.ApplicationUser.Commands.OwnerCrud.AddHotels;
+using Booking.Application.ApplicationUser.Commands.OwnerCrud.DeleteOffer;
+using Booking.Application.ApplicationUser.Commands.OwnerCrud.DeleteRoom;
 using Booking.Application.ApplicationUser.Queries.GetHotelsByOwnerId;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -45,6 +47,39 @@ namespace Booking.Api.Controllers
             catch (System.Exception ex)
             {
                 return Content(ex.Message);
+            }
+        }
+
+        [HttpDelete("{roomId:int}")]
+        public async Task<IActionResult> DeleteRoom(int roomId)
+        {
+            var command = new DeleteRoomCommand(roomId);
+            var result = await _mediator.Send(command);
+
+            if (result.Contains("successfully"))
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
+            }
+        }
+
+
+        [HttpDelete("{offerId:int}/offers")]
+        public async Task<IActionResult> DeleteOffer(int offerId)
+        {
+            var command = new DeleteOfferCommand(offerId);
+            var result = await _mediator.Send(command);
+
+            if (result.Contains("successfully"))
+            {
+                return Ok(result);
+            }
+            else
+            {
+                return BadRequest(result);
             }
         }
     }

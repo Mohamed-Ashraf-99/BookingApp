@@ -18,6 +18,14 @@ namespace Booking.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
+        public async Task DeleteOffer(int offerId)
+        {
+            var offer = await _context.Offers.FindAsync(offerId);
+            offer.IsDeleted = true;
+            _context.Offers.Update(offer);
+            await _context.SaveChangesAsync();
+            
+        }
         public async Task<IEnumerable<Offer>> GetAllOffersAsync()
         {
             return await _context.Offers.Include(off => off.Hotel).ThenInclude(off=>off.Images).Where(off => off.IsDeleted != true).ToListAsync();
