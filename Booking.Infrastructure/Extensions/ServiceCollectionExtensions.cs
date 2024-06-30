@@ -42,6 +42,7 @@ public static class ServiceCollectionExtensions
                 UseRecommendedIsolationLevel = true,
                 QueuePollInterval = TimeSpan.FromMinutes(5) // Check the queue every 5 minutes
             }));
+
         services.AddHangfireServer();
 
         #region JWT Configuration

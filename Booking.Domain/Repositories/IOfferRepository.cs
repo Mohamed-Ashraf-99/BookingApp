@@ -16,5 +16,6 @@ namespace Booking.Domain.Repositories
         Task AddOffer(Offer offer);
 
         Task DeleteOffer(int offerId);
+        Task DeleteExpiredOffer();
     }
 }
