@@ -70,7 +70,7 @@ public class AuthenticationController(IMediator _mediator) : ControllerBase
     }
 
     [HttpPost("SendResetPasswordRequest")]
-    public async Task<IActionResult> SendResetPasswordRequest([FromQuery] SendResetPasswordCommand command)
+    public async Task<IActionResult> SendResetPasswordRequest([FromForm] SendResetPasswordCommand command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);
@@ -78,7 +78,7 @@ public class AuthenticationController(IMediator _mediator) : ControllerBase
     }
 
     [HttpPost("ConfirmResetPassword")]
-    public async Task<IActionResult> ConfirmResetPassword([FromQuery] ConfirmResetPasswordQuery command)
+    public async Task<IActionResult> ConfirmResetPassword([FromForm] ConfirmResetPasswordQuery command)
     {
         var response = await _mediator.Send(command);
         return Ok(response);
