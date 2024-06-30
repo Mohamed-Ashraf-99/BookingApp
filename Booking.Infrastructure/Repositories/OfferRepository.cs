@@ -18,6 +18,21 @@ namespace Booking.Infrastructure.Repositories
             _context.SaveChanges();
         }
 
+        public async Task DeleteExpiredOffer()
+        {
+            var expiredOffers = await _context.Offers
+               .Where(r => r.EndDate <= DateTime.Now)
+               .ToListAsync();
+
+            foreach (var offer in expiredOffers)
+            {
+                offer.IsDeleted = true;
+                _context.Offers.Update(offer);
+            }
+            await _context.SaveChangesAsync();
+
+        }
+
         public async Task DeleteOffer(int offerId)
         {
             var offer = await _context.Offers.FindAsync(offerId);
