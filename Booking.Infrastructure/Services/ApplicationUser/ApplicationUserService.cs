@@ -71,7 +71,7 @@ public class ApplicationUserService(ILogger<ApplicationUserService> _logger,
             await _ownerService.CreateOwnerAsync(owner);
 
             // Send Confirmation mail
-            await SendEmailConfirmation(user);
+            await SendOwnerEmailConfirmation(user);
 
             await transaction.CommitAsync();
             _logger.LogInformation($"User {user.UserName} successfully registered.");
