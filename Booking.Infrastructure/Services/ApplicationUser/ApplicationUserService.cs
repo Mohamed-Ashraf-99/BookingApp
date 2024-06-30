@@ -157,4 +157,33 @@ public class ApplicationUserService(ILogger<ApplicationUserService> _logger,
 
         return "Email sent successfully.";
     }
+
+    private async Task<string> SendOwnerEmailConfirmation(User user)
+    {
+        // Send Confirmation mail
+
+        //1->> Generate email code confirmation 
+        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+
+        //2->>create the code to email to click on it to verify 
+        var requestAccessor = _httpContextAccessor.HttpContext.Request;
+
+
+        var returnUrl = $"{requestAccessor.Scheme}://{requestAccessor.Host}{_urlHelper.Action("ConfirmOwnerEmail", "Authentication", new { UserId = user.Id, Code = code })}";
+        //var returnUrl = $"{requestAccessor.Scheme}://{requestAccessor.Host}/api/Authentication/ConfirmEmail?userId={user.Id}&code={code}";
+
+        var filePath = $"{Directory.GetCurrentDirectory()}\\Template\\ConfirmEmailTemplate.html";
+
+        var str = new StreamReader(filePath);
+
+        var mailText = str.ReadToEnd();
+        str.Close();
+
+        mailText = mailText.Replace("[username]", user.UserName).Replace("[email]", user.Email).Replace("[returnUrl]", returnUrl);
+
+        //3->> Send the code to user email
+        await _emailService.SendEmailAsync(user.Email, mailText, "Welcome to our website");
+
+        return "Email sent successfully.";
+    }
 }

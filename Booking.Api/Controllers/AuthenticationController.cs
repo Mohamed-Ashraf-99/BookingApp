@@ -61,6 +61,14 @@ public class AuthenticationController(IMediator _mediator) : ControllerBase
 
     }
 
+    [HttpGet("ConfirmOwnerEmail")]
+    public async Task<IActionResult> ConfirmOwnerEmail([FromQuery] ConfirmEmailQuery confirmEmailQuery)
+    {
+        var response = await _mediator.Send(confirmEmailQuery);
+        return Redirect("http://localhost:4200/registrationconfirmed");
+
+    }
+
     [HttpPost("SendResetPasswordRequest")]
     public async Task<IActionResult> SendResetPasswordRequest([FromQuery] SendResetPasswordCommand command)
     {
