@@ -8,6 +8,7 @@ using Booking.Application.Services.FileUpload;
 using Booking.Application.Services.OwnerServ;
 using Booking.Domain.Entities;
 using Booking.Domain.Entities.Identity;
+using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -25,7 +26,7 @@ public class ApplicationUserService(ILogger<ApplicationUserService> _logger,
     IUrlHelper _urlHelper,
     IMapper _mapper,
     IFileService _fileService
-    ,IOwnerService _ownerService) : IApplicationUserService
+    ,IOwnerService _ownerService, IClientRepository _clientRepository) : IApplicationUserService
 {
     public async Task<string> CreateOwnerAsync(User user, string password, IFormFile formFile)
     {
@@ -108,23 +109,39 @@ public class ApplicationUserService(ILogger<ApplicationUserService> _logger,
                 _logger.LogError($"User registration failed for {user.UserName}. Errors: {errors}");
                 return $"Registration failed: {errors}";
             }
-            var users = await _userManager.Users.ToListAsync();
 
+            // Determine user role based on existing users
+            var users = await _userManager.Users.ToListAsync();
             if (users.Count > 0)
+            {
                 await _userManager.AddToRoleAsync(user, "User");
+
+               
+            }
             else
+            {
                 await _userManager.AddToRoleAsync(user, "Admin");
+            }
+            // Create the User
+          
+
+            var client = _mapper.Map<Client>(user);
+            await _clientRepository.CreateAsync(client);
+
 
             // Send Confirmation mail
             await SendEmailConfirmation(user);
 
             await transaction.CommitAsync();
+
+            
             _logger.LogInformation($"User {user.UserName} successfully registered.");
             return "Registration succeeded";
         }
         catch (Exception ex)
         {
             await transaction.RollbackAsync();
+            _logger.LogError($"User registration failed. Error: {ex.Message}");
             return "Failed";
         }
     }

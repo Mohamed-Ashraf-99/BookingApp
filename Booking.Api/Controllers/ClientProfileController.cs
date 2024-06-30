@@ -1,4 +1,6 @@
-﻿using Booking.Application.ClientProfile.Commands.UpdateProfile;
+﻿using Booking.Application.Booking.Queries.ClientReservations;
+using Booking.Application.ClientProfile.Commands.DeleteProfile;
+using Booking.Application.ClientProfile.Commands.UpdateProfile;
 using Booking.Application.ClientProfile.Queries.GetClientData;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -28,17 +30,19 @@ namespace Booking.Api.Controllers
                 return BadRequest(response);         
         }
 
-        //[HttpGet("UpdateProfile")]
-        //public async Task<IActionResult> GetClientReservations([FromRoute]int clientId)
-        //{
+        [HttpGet("GetClientReservations")]
+        public async Task<IActionResult> GetClientReservations([FromQuery]int userId)
+        {
+            var response = await _mediator.Send(new ClientReservationsQuery(userId));
+            return Ok(response);
+        }
 
-        //}
-
-        //[HttpDelete("UpdateProfile")]
-        //public async Task<IActionResult> DeleteProfile([FromRoute] int clientId)
-        //{
-
-        //}
+        [HttpDelete("DeleteProfile")]
+        public async Task<IActionResult> DeleteProfile([FromQuery] int userId)
+        {
+            var response = await _mediator.Send(new DeleteProfileCommand(userId));
+            return Ok(response);
+        }
 
     }
 }

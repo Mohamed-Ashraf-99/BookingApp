@@ -46,9 +46,9 @@ namespace Booking.Application.ApplicationUser.Commands.Register
                 .When(user => !string.IsNullOrEmpty(user.Street));
 
             // Postal Code validation
-            RuleFor(user => user.PostalCode)
-                .Matches("^[0-9]{5}(?:-[0-9]{4})?$").WithMessage("Invalid postal code format.")
-                .When(user => !string.IsNullOrEmpty(user.PostalCode));
+            //RuleFor(user => user.PostalCode)
+            //    .Matches("^[0-9]{5}(?:-[0-9]{4})?$").WithMessage("Invalid postal code format.")
+            //    .When(user => !string.IsNullOrEmpty(user.PostalCode));
 
             // Phone Number validation 
             RuleFor(user => user.PhoneNumber)

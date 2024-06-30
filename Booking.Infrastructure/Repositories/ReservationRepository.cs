@@ -29,4 +29,10 @@ public class ReservationRepository(BookingDbContext _context) : IReservationRepo
         return await _context.Reservations.FindAsync(id);
     }
 
+    public async Task<IEnumerable<Reservation>> GetClientReservationByUserIdAsync(int userId)
+    {
+        var client = await _context.Clients.FirstOrDefaultAsync(x => x.User.Id == userId);
+        var clientReservations = await _context.Reservations.Where(x => x.ClientId == client.Id).ToListAsync();
+        return clientReservations;
+    }
 }

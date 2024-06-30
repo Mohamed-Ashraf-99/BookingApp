@@ -32,5 +32,11 @@ public class ClientProfile : Profile
             .ForMember(dest => dest.Street, opt => opt.MapFrom(src => src.Address.Street))
             .ForMember(dest => dest.PostalCode, opt => opt.MapFrom(src => src.Address.PostalCode))
             .ForMember(dest => dest.PhoneNumber, opt => opt.MapFrom(src => src.PhoneNumber));
+
+
+        CreateMap<User, Client>()
+            .ForMember(dest => dest.User, opt => opt.MapFrom(src => src))
+            .ForMember(dest => dest.Complains, opt => opt.Ignore())
+            .ForMember(dest => dest.Id, opt => opt.Ignore());
     }
 }
