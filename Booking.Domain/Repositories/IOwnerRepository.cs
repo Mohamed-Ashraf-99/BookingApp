@@ -12,5 +12,6 @@ public interface IOwnerRepository
     Task<Owner> GetOwnerById(int id);
     Task<bool> UpdateOwnerAsync(Owner owner);
     Task<int> GetUserIdByOwnerId(int ownerId);
+    Task<bool> DeleteAsync(int ownerId);
 
 }

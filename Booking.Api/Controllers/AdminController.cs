@@ -1,4 +1,5 @@
 ﻿using Booking.Application.AdminDashboard.Commands.ApproveOwners;
+using Booking.Application.AdminDashboard.Commands.DeclineOwners;
 using Booking.Application.AdminDashboard.Queries.GetAllUnVerifiedOwners;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -21,6 +22,13 @@ namespace Booking.Api.Controllers
         public async Task<IActionResult> ApproveOwner([FromQuery] int id)
         {
             var response = await _mediator.Send(new ApproveOwnerCommand(id));
+            return Ok(response);
+        }
+
+        [HttpDelete("DeclineOwner")]
+        public async Task<IActionResult> DeclineOwner([FromQuery] int id)
+        {
+            var response = await _mediator.Send(new DeclineOwnersCommand(id));
             return Ok(response);
         }
     }

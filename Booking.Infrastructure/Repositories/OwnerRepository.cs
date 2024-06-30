@@ -112,4 +112,20 @@ public class OwnerRepository : IOwnerRepository
         var userId = owner.User.Id;
         return userId;
     }
+
+    public async Task<bool> DeleteAsync(int ownerId)
+    {
+        var owner = await GetOwnerById(ownerId);
+        try
+        {
+            _context.Owner.Remove(owner);
+            await _context.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"An error occurred while deleting the owner with user id {owner.Id}");
+            throw new Exception("Error deleting owner in database", ex);
+        }
+    }
 }
