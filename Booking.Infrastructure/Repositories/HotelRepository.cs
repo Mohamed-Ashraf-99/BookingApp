@@ -80,7 +80,7 @@ namespace Booking.Infrastructure.Repositories
                 .Include(h => h.Owner)
                 //.Include(h => h.Complains)
                 //.Include(h => h.Rooms)
-                //.Include(h => h.Offers)
+                .Include(h => h.Offers)
                 .Where(h => h.IsDeleted != true && h.Reviews.Average(r => r.Rate) > overallAverageRating)
                 .ToListAsync();
 
