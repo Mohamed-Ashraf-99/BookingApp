@@ -23,6 +23,8 @@
 
   <ItemGroup>
     <Folder Include="Authentication\Mapping\" />
+    <Folder Include="ClientProfile\Commands\DeleteProfile\" />
+    <Folder Include="ClientProfile\Queries\GetClientData\" />
     <Folder Include="Emails\Mapping\" />
     <Folder Include="Emails\Queries\" />
     <Folder Include="RegisterAsOwner\Mapping\" />

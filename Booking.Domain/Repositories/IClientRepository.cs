@@ -1,4 +1,6 @@
-﻿namespace Booking.Domain.Repositories;
+﻿using Booking.Domain.Entities;
+
+namespace Booking.Domain.Repositories;
 
 public interface IClientRepository
 {

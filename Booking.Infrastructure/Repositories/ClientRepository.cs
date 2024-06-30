@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Repositories;
+﻿using Booking.Domain.Entities;
+using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,4 +13,6 @@ public class ClientRepository(BookingDbContext _context) : IClientRepository
         var clientId = client.Id;
         return clientId;
     }
+
+  
 }

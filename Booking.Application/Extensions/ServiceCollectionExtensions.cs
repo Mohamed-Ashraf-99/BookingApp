@@ -2,6 +2,7 @@
 using Booking.Application.Services.ApplicationUser;
 using Booking.Application.Services.Authentication;
 using Booking.Application.Services.Authorization;
+using Booking.Application.Services.ClientProfile;
 using Booking.Application.Services.CurrentUser;
 using Booking.Application.Services.Email;
 using Booking.Application.Services.FileUpload;
@@ -33,6 +34,7 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IPaymentServices, PaymentServices>();
         services.AddScoped<IFileService, FileService>();
         services.AddScoped<IOwnerService, OwnerService>();
+        services.AddScoped<IClientProfileService, ClientProfileService>();
         services.AddMemoryCache();
 
     }
