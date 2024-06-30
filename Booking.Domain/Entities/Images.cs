@@ -15,5 +15,7 @@ namespace Booking.Domain.Entities
 
         public int HotelID { get; set; }
         public Hotel Hotel { get; set; }
+
+        //public string Base64Data { get; set; }
     }
 }

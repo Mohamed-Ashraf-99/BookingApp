@@ -8,5 +8,5 @@ public class CreateComplainCommand : IRequest<string>
     public int HotelId { get; set; }
     public int OwnerId { get; set; }
     public int ClientId { get; set; }
-    public DateTime Date { get; set; }
+    public DateTime? Date { get; set; } = DateTime.Now;
 }

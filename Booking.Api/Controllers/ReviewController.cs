@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using Booking.Application.ApplicationUser.Commands.AddCommentToHotel;
+using Booking.Application.ApplicationUser.Queries.GetAllHotelReviews;
 using Booking.Application.ApplicationUser.Queries.GetAllReviews;
 using Booking.Application.ApplicationUser.Queries.GetTrendingHotels;
 using MediatR;
@@ -23,6 +24,24 @@ namespace Booking.Api.Controllers
             {
                 return Ok(reviews);
                 
+            }
+            else
+            {
+                return NotFound("No reviews found .");
+            }
+        }
+
+        [HttpGet("{hotelId:int}")]
+        public async Task<IActionResult> GetAllHotelReviews(int hotelId)
+        {
+
+            var query = new GetAllHotelReviewsListQuery(hotelId);
+            var reviews = await _mediator.Send(query);
+
+            if (reviews != null && reviews.Any())
+            {
+                return Ok(reviews);
+
             }
             else
             {

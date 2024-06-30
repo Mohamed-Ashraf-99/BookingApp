@@ -6,23 +6,32 @@ using Booking.Domain.Repositories;
 using Booking.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 public class OwnerRepository : IOwnerRepository
+namespace Booking.Infrastructure.Repositories
 {
     private readonly BookingDbContext _context;
     private readonly ILogger<OwnerRepository> _logger;
 
     public OwnerRepository(BookingDbContext context, ILogger<OwnerRepository> logger)
+    public class OwnerRepository (BookingDbContext _context) : IOwnerRepository
     {
         _context = context;
         _logger = logger;
     }
 
     public async Task<int> CreateAsync(Owner owner)
-    {
+        public async Task<int> AddHotels(Hotel hotel)
+        {
         try
         {
             await _context.Owner.AddAsync(owner);
+            await _context.Hotels.AddAsync(hotel);
             await _context.SaveChangesAsync();
             return owner.Id;
         }
@@ -80,7 +89,8 @@ public class OwnerRepository : IOwnerRepository
             if (owner == null)
             {
                 _logger.LogWarning($"No owner found for user id {id}");
-            }
+            return hotel.Id;
+        }
 
             return owner;
         }
@@ -100,18 +110,25 @@ public class OwnerRepository : IOwnerRepository
             return true;
         }
         catch (DbUpdateException ex)
+        public async Task AddImagesForHotels(Images image)
         {
             _logger.LogError(ex, $"An error occurred while updating the owner with user id {owner.Id}");
             throw new Exception("Error updating owner in database", ex);
         }
-    }
+            await _context.images.AddAsync(image);
+            //await _context.SaveChangesAsync();
+        }
 
     public async Task<int> GetUserIdByOwnerId(int ownerId)
-    {
+        public async Task<int> GetOwnerIdByUserId(int userId)
+        {
         var owner = await GetOwnerById(ownerId);
         var userId = owner.User.Id;
         return userId;
-    }
+            var owner = await _context.Owner.Include(x => x.User).Where(usr => usr.User.Id == userId).FirstOrDefaultAsync();
+            var ownerId = owner.Id;
+            return ownerId;
+        }
 
     public async Task<bool> DeleteAsync(int ownerId)
     {
@@ -123,9 +140,11 @@ public class OwnerRepository : IOwnerRepository
             return true;
         }
         catch (Exception ex)
+        public async Task UpdateChanges()
         {
             _logger.LogError(ex, $"An error occurred while deleting the owner with user id {owner.Id}");
             throw new Exception("Error deleting owner in database", ex);
+             _context.SaveChanges();
         }
     }
 }

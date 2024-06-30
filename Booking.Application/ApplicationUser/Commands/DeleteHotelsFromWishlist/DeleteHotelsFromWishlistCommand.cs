@@ -9,7 +9,7 @@ namespace Booking.Application.ApplicationUser.Commands.DeleteHotelsFromWishlist
 {
     public class DeleteHotelsFromWishlistCommand : IRequest<string>
     {
-        public int clientId { get; set; }
+        public int userId { get; set; }
         public int hotelId { get; set; }
 
     }

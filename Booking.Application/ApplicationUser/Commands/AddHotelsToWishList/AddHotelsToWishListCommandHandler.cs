@@ -14,7 +14,7 @@ using System.Threading.Tasks;
 namespace Booking.Application.ApplicationUser.Commands.AddHotelsToWishList
 {
     public class AddHotelsToWishListCommandHandler(ILogger<AddHotelsToWishListCommandHandler> _logger,
-    IWishListRepository wishListRepository, IHotelRepository hotelRepository) : IRequestHandler<AddHotelsToWishListCommand,string>
+    IWishListRepository wishListRepository, IHotelRepository hotelRepository,IClientRepository clientRepository) : IRequestHandler<AddHotelsToWishListCommand,string>
     {
 
 
@@ -22,17 +22,18 @@ namespace Booking.Application.ApplicationUser.Commands.AddHotelsToWishList
         {
             try
             {
-                var wishList = await wishListRepository.GetWishListByClientIdAsync(request.clientId);
+                request.UserId = await clientRepository.GetClientIdByUserId(request.UserId);
+                var wishList = await wishListRepository.GetWishListByClientIdAsync(request.UserId);
 
                 if (wishList == null)
                 {
-                    _logger.LogInformation($"Creating a new wishlist for client with ID {request.clientId}");
-                    wishList = new WishList { ClientId = request.clientId, IsDeleted = false, HotelWishLists = new List<HotelWishList>() };
+                    _logger.LogInformation($"Creating a new wishlist for client with ID {request. UserId}");
+                    wishList = new WishList { ClientId = request.UserId, IsDeleted = false, HotelWishLists = new List<HotelWishList>() };
                     await wishListRepository.AddWishListforClient(wishList);
                 }
                 else if (wishList.IsDeleted == true)
                 {
-                    _logger.LogInformation($"Wishlist for client with ID {request.clientId} is marked as deleted. Updating IsDeleted to false.");
+                    _logger.LogInformation($"Wishlist for client with ID {request.UserId} is marked as deleted. Updating IsDeleted to false.");
                     wishList.IsDeleted = false;
                     await wishListRepository.UpdateWishListStatusAsync(wishList);
                 }
@@ -54,12 +55,12 @@ namespace Booking.Application.ApplicationUser.Commands.AddHotelsToWishList
                 wishList.HotelWishLists.Add(hotelWishList);
                 await wishListRepository.AddHotelsToWishList(hotelWishList);
 
-                _logger.LogInformation($"Hotel with ID {request.HotelId} successfully added to the wishlist for client ID {request.clientId}.");
+                _logger.LogInformation($"Hotel with ID {request.HotelId} successfully added to the wishlist for client ID {request.UserId}.");
                 return "Insertion succeeded.";
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, $"An error occurred while adding hotel with ID {request.HotelId} to the wishlist for client ID {request.clientId}.");
+                _logger.LogError(ex, $"An error occurred while adding hotel with ID {request.HotelId} to the wishlist for client ID {request.HotelId}.");
                 return "An error occurred while processing your request.";
             }
         }

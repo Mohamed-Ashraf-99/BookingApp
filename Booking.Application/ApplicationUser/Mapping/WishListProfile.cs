@@ -31,7 +31,8 @@ namespace Booking.Application.ApplicationUser.Mapping
 
             CreateMap<Reviews, RevieewDto>()
               .ForMember(dest => dest.Hotel, opt => opt.MapFrom(src => src.Hotel))
-              .ForMember(dest => dest.Client, opt => opt.MapFrom(src => src.Client)).ReverseMap();
+              .ForMember(dest => dest.Client, opt => opt.MapFrom(src => src.Client))
+             .ReverseMap();
 
 
             CreateMap<Images, ImageDto>();

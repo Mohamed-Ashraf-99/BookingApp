@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace Booking.Application.ApplicationUser.Commands.AddCommentToHotel
 {
     public class AddCommentToHotelCommandHandler(ILogger<AddCommentToHotelCommandHandler> _logger,
-    IReviewsRepository reviewsRepository) : IRequestHandler<AddCommentToHotelCommand, string>
+    IReviewsRepository reviewsRepository, IClientRepository clientRepository) : IRequestHandler<AddCommentToHotelCommand, string>
     {
         public async Task<string> Handle(AddCommentToHotelCommand request, CancellationToken cancellationToken)
         {
@@ -25,14 +25,14 @@ namespace Booking.Application.ApplicationUser.Commands.AddCommentToHotel
                     Rate = request.Rate,
                     Comment = request.CommentText,
                     HotelId = request.hotelId,
-                    ClientId = request.clientId,
+                    ClientId = await clientRepository.GetClientIdByUserId(request.userId),
                     Date = DateTime.UtcNow
                 };
 
                 _logger.LogInformation("Created Review object: {Review}", review);
 
                 await reviewsRepository.InsertReview(review);
-                _logger.LogInformation("Inserted Review into repository for HotelId: {HotelId}, ClientId: {ClientId}", request.hotelId, request.clientId);
+                _logger.LogInformation("Inserted Review into repository for HotelId: {HotelId}, ClientId: {ClientId}", request.hotelId, request.userId);
 
                 var resultMessage = "Review added successfully";
                 _logger.LogInformation(resultMessage);
@@ -40,7 +40,7 @@ namespace Booking.Application.ApplicationUser.Commands.AddCommentToHotel
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while handling AddCommentToHotelCommand for HotelId: {HotelId}, ClientId: {ClientId}", request.hotelId, request.clientId);
+                _logger.LogError(ex, "Error occurred while handling AddCommentToHotelCommand for HotelId: {HotelId}, ClientId: {ClientId}", request.hotelId, request.userId);
                 throw;
             }
         }
