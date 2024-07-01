@@ -16,14 +16,14 @@ public class ComplainsRepository(BookingDbContext _context) : IComplainsReposito
 
     public async Task<List<Complains>> GetComplainsByHotelIdAsync(int hotelId)
     {
-        return await _context.Complains
+        return await _context.Complains.Include(x => x.Client).ThenInclude(y => y.User)
             .Where(c => c.HotelId == hotelId)
             .ToListAsync();
     }
 
     public async Task<List<Complains>> GetComplainsByUserIdAsync(int userId)
     {
-        return await _context.Complains
+        return await _context.Complains.Include(x => x.Client).ThenInclude(y => y.User)
             .Where(c => c.ClientId == userId)
             .ToListAsync();
     }

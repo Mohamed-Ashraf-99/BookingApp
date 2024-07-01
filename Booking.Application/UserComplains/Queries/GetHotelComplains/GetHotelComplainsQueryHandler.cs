@@ -1,4 +1,5 @@
-﻿using Booking.Domain.Entities;
+﻿using AutoMapper;
+using Booking.Domain.Entities;
 using Booking.Domain.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
@@ -11,10 +12,14 @@ using System.Threading.Tasks;
 namespace Booking.Application.UserComplains.Queries.GetHotelComplains;
 
 public class GetHotelComplainsQueryHandler(IComplainsRepository _complainsRepository,
-    ILogger<GetHotelComplainsQueryHandler> _logger) : IRequestHandler<GetHotelComplainsQuery, List<Complains>>
+    ILogger<GetHotelComplainsQueryHandler> _logger,
+    IMapper _mapper) : IRequestHandler<GetHotelComplainsQuery, List<ComplainsDto>>
 {
-    public async Task<List<Complains>> Handle(GetHotelComplainsQuery request, CancellationToken cancellationToken)
+    public async Task<List<ComplainsDto>> Handle(GetHotelComplainsQuery request, CancellationToken cancellationToken)
     {
-        return await _complainsRepository.GetComplainsByHotelIdAsync(request.HotelId);
+        _logger.LogInformation($"Get Complains for Hotel with id : {request.HotelId}");
+        var complains = await _complainsRepository.GetComplainsByHotelIdAsync(request.HotelId);
+        var complainsDto = _mapper.Map<List<ComplainsDto>>(complains);
+        return complainsDto;
     }
 }

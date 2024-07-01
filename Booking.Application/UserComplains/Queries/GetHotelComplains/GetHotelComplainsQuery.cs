@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Booking.Application.UserComplains.Queries.GetHotelComplains;
 
-public class GetHotelComplainsQuery : IRequest<List<Complains>>
+public class GetHotelComplainsQuery : IRequest<List<ComplainsDto>>
 {
     public int HotelId { get; set; }
 }

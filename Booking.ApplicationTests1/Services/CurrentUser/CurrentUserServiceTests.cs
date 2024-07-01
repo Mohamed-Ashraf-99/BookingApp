@@ -17,6 +17,7 @@ namespace Booking.Application.Services.CurrentUser.Tests
         private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
         private readonly Mock<UserManager<User>> _userManagerMock;
         private readonly CurrentUserService _currentUserService;
+        private readonly Mock<CurrentUserService> _currentUserServiceMock;
 
         public CurrentUserServiceTests()
         {
@@ -24,6 +25,8 @@ namespace Booking.Application.Services.CurrentUser.Tests
             _userManagerMock = new Mock<UserManager<User>>(
                 Mock.Of<IUserStore<User>>(), null, null, null, null, null, null, null, null);
             _currentUserService = new CurrentUserService(_httpContextAccessorMock.Object, _userManagerMock.Object);
+            _currentUserServiceMock = new Mock<CurrentUserService>(_httpContextAccessorMock.Object, _userManagerMock.Object);
+
         }
 
         [Fact]
