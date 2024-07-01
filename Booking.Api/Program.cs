@@ -79,7 +79,7 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
-app.UseHangfireDashboard("/hangfireDashboard");
+app.UseHangfireDashboard("/HangFireDashboard");
 
 // Configure HangFire recurring job scheduling within a method
 using (var scope = app.Services.CreateScope())

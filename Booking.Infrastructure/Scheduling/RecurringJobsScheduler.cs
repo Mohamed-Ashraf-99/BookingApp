@@ -28,7 +28,7 @@ public class JobsScheduler
                 "*/5 * * * *"); // Every 5 minutes
 
         _recurringJobManager.AddOrUpdate(
-     "DeleteExpiredReservations",
+     "DeleteExpiredOffers",
              () => _offerRepository.DeleteExpiredOffer(),
              "*/5 * * * *"); // Every 5 minutes
     }
